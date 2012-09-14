@@ -1,30 +1,55 @@
 <head>
-  <title>Superchat</title>
+    <title>Superchat</title>
+    <script>
+
+    </script>
 </head>
 
 <body>
-  <div id="outer">
-    {{> entrada}}
-  </div>
+    <div id="outer">
+        {{> entrada}}
+    </div>
 </body>
 
 <template name="entrada">
-  {{#if entrou}}
-  <h1>SuperChat</h1>
-  <div id="chat" style="height:200px; width: 400px; border: 2px black solid; overflow: scroll;">
-  {{#each chat}}
-  <p>{{user}} diz: {{msg}}</p>
-  {{scroll_to_bottom}}
-  {{/each}}
-  </div>
-  <input type="text" id="msg" />
-  <button id="enviar">Enviar</button>
-  {{/if}}
+    {{#if entrou}}
+    <h1>SuperChat</h1>
+    <div id="chat" style="height:200px; width: 400px; border: 2px black solid; overflow: scroll;">
+        {{#each msgs}}
+        <p>
+            {{user}}{{action}}{{msg}}
+        </p>
+        {{scroll_to_bottom}}
+        {{/each}}
+    </div>
+    <input type="text" id="msg" />
+    <button id="enviar">
+        Enviar
+    </button>
+    <div id="usuarios">
+        <ul>
+            {{#each usuarios}}
+            <li>
+                {{nome}}
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    {{/if}}
 
-  {{#unless entrou}}
-  Seu nome:
-  <input id="nome" type="text" />
-  <button class="entrar">Entrar</button>
-  {{/unless}}
+    {{#unless entrou}}
+    <div id="salas">
+    <p>Seu nome:</p>
+    <input id="nome-usuario" type="text" />
+    <p>Salas:</p>
+    <ul>
+        {{#each salas}}
+        <li><a id="{{nome}}" href="#" class="entrar" onclick="return(false);">{{nome}}</a></li>
+        {{/each}}
+    </ul>
+    <input id="nome-sala" type="text" />
+    <button id="cria-sala">Criar</button> 
+    </div>
+    {{/unless}}
 </template>
 

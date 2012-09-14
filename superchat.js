@@ -1,95 +1,137 @@
-// Set up a collection to contain player information. On the server,
-// it is backed by a MongoDB collection named "players."
-
+// Collections
 Nomes = new Meteor.Collection("nomes");
-Chat = new Meteor.Collection("chat");
+Msgs = new Meteor.Collection("msgs");
+Salas = new Meteor.Collection("salas");
 
-if (Meteor.is_client) {
-  Template.entrada.entrou = function() {
-    if(Session.get('entrou')){
-      return true;
+Msg = {
+    diz : function(nome, action, msg) {
+        return Msgs.insert({
+            user : nome,
+            action : action,
+            msg : msg,
+            sala : Session.get('sala')
+        });
+    },
+};
+
+Nome = {
+    remove : function(nome) {
+        return Nomes.remove({
+            nome : nome
+        });
+    },
+    get : function(nome) {
+        return Nomes.findOne({
+            nome : nome
+        });
+    },
+    set : function(nome) {
+        return Nomes.insert({
+            nome : nome
+        });
     }
-    return false;
-  };
+};
 
-  Template.entrada.nome = function() {
-    return Session.get('nome');
-  };
-
-  Template.entrada.chat = function() {
-    return Chat.find({});
-  };
-
-  Template.entrada.scroll_to_bottom = function() {
-    Meteor.defer(function() {
-      try{
-        var chat = document.getElementById('chat');
-        chat.scrollTop = chat.scrollHeight;
-      } catch(err) {
-        console.log(err);
-      }
-    });
-  }
-  
-  Template.entrada.events = {
-    'click button.entrar': function() {
-      var nome = document.getElementById('nome').value.trim();
-      if(Validation.nome_valido(nome)){
-        Nome.set_nome(nome);
-        Session.set('entrou', true);
-        Session.set('nome', nome);
-        Chat.insert({user: Session.get('nome'), msg: 'Entrou na sala...'});
-      } else {
-        alert(Validation.get_erro());
-      }
-    },
-    'click button#enviar': function() {
-      var msg = document.getElementById('msg').value.trim();
-      Chat.insert({user: Session.get('nome'), msg: msg});
-     }
-  };
-
-  Nome = {
-    clear_nome: function(nome) {
-      return Nomes.remove({nome: nome});
-    },
-    get_nome: function(nome) {
-      return Nomes.findOne({nome: nome});
-    },
-    set_nome: function(nome) {
-      return Nomes.insert({nome: nome});
+Sala = {
+    set : function(nome) {
+        return Salas.insert({
+            nome : nome
+        });
     }
-  };
-
-  Validation = {
-    get_erro: function(msg) {
-      return Session.get('erro');
-    },
-    set_erro: function(msg) {
-      return Session.set('erro', msg);
-    },
-    clear_erro: function() {
-      return Session.set('erro', undefined);
-    },
-    nome_valido: function(nome) {
-      this.clear_erro();
-      if(nome.length == 0) {
-        this.set_erro('Nome nao pode ser vazio');
-        return false;
-      }
-      if(Nome.get_nome(nome)) {
-        this.set_erro('Nome ja esta sendo usado');
-        return false;
-      }
-      return true;
-    }      
-  };
-      
 }
 
-// On server startup, create some players if the database is empty.
+Validation = {
+    get_erro : function(msg) {
+        return Session.get('erro');
+    },
+    set_erro : function(msg) {
+        return Session.set('erro', msg);
+    },
+    clear_erro : function() {
+        return Session.set('erro', undefined);
+    },
+    nome_valido : function(nome) {
+        this.clear_erro();
+        if (nome.length == 0) {
+            this.set_erro('Nome nao pode ser vazio');
+            return false;
+        }
+        if (Nome.get(nome)) {
+            this.set_erro('Nome ja esta sendo usado');
+            return false;
+        }
+        return true;
+    }
+};
+
+if (Meteor.is_client) {
+    window.onbeforeunload = function(e) {
+        var message = "Your confirmation message goes here.";
+        var nome = Session.get('nome');
+        Nome.remove(nome);
+        Meteor.flush();
+        return message;
+    };
+
+    Template.entrada.msgs = function() {
+        return Msgs.find({
+            'sala' : Session.get('sala')
+        });
+    };
+
+    Template.entrada.salas = function() {
+        return Salas.find({});
+    };
+
+    Template.entrada.usuarios = function() {
+        return Nomes.find({});
+    };
+
+    Template.entrada.entrou = function() {
+        if (Session.get('entrou')) {
+            return true;
+        }
+        return false;
+    };
+
+    Template.entrada.scroll_to_bottom = function() {
+        Meteor.defer(function() {
+            try {
+                var chat = document.getElementById('chat');
+                chat.scrollTop = chat.scrollHeight;
+            } catch(err) {
+                console.log(err);
+            }
+        });
+    };
+
+    Template.entrada.events = {
+        'click button#cria-sala' : function(e) {
+            var nome = document.getElementById('nome-sala').value.trim();
+            Sala.set(nome);
+        },
+        'click a.entrar' : function() {
+            var nome = document.getElementById('nome-usuario').value.trim();
+            var nome_sala = this.nome;
+            if (Validation.nome_valido(nome)) {
+                Nome.set(nome);
+                Session.set('entrou', true);
+                Session.set('nome', nome);
+                Session.set('sala', nome_sala);
+                Msg.diz(nome, ': ', 'Entrou na sala...', nome_sala);
+            } else {
+                alert(Validation.get_erro());
+            }
+        },
+        'click button#enviar' : function() {
+            var msg = document.getElementById('msg').value.trim();
+            Msg.diz(Session.get('nome'), ' disse: ', msg);
+        }
+    };
+}
+
 if (Meteor.is_server) {
-  Meteor.startup(function () {
-    Nomes.remove({});
-  });
+    Meteor.startup(function() {
+        // Nomes.remove({});
+    });
 }
