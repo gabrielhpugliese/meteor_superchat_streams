@@ -15,19 +15,22 @@ Msg = {
 };
 
 Nome = {
-    remove : function(nome) {
+    remove : function(nome, sala) {
         return Nomes.remove({
-            nome : nome
+            nome : nome,
+            sala : sala
         });
     },
-    get : function(nome) {
+    get : function(nome, sala) {
         return Nomes.findOne({
-            nome : nome
+            nome : nome,
+            sala : sala
         });
     },
-    set : function(nome) {
+    set : function(nome, sala) {
         return Nomes.insert({
-            nome : nome
+            nome : nome,
+            sala : sala
         });
     }
 };
@@ -35,6 +38,11 @@ Nome = {
 Sala = {
     set : function(nome) {
         return Salas.insert({
+            nome : nome
+        });
+    },
+    get : function(nome) {
+        return Salas.findOne({
             nome : nome
         });
     }
@@ -50,14 +58,26 @@ Validation = {
     clear_erro : function() {
         return Session.set('erro', undefined);
     },
-    nome_valido : function(nome) {
+    nome_valido : function(nome, sala) {
         this.clear_erro();
         if (nome.length == 0) {
             this.set_erro('Nome nao pode ser vazio');
             return false;
         }
-        if (Nome.get(nome)) {
+        if (Nome.get(nome, sala)) {
             this.set_erro('Nome ja esta sendo usado');
+            return false;
+        }
+        return true;
+    },
+    sala_valida : function(nome) {
+        this.clear_erro();
+        if (nome.length == 0) {
+            this.set_erro('Nome da sala nao pode ser vazio');
+            return false;
+        }
+        if (Sala.get(nome)) {
+            this.set_erro('Nome da sala ja esta sendo usado');
             return false;
         }
         return true;
@@ -66,7 +86,7 @@ Validation = {
 
 if (Meteor.is_client) {
     jQuery(window).unload(function() {
-        Meteor.call('sair', Session.get('nome'));
+        Meteor.call('sair', Session.get('nome'), Session.get('sala'));
         console.log('bla');
     });
 
@@ -102,38 +122,48 @@ if (Meteor.is_client) {
         });
     };
 
+    enviar_msg = function(e) {
+        e = e || event;
+        if ((e.keyCode || event.which || event.charCode || 0) == 13 ||
+            e.type == 'click') {
+            var $msg_box = document.getElementById('msg');
+            var msg = $msg_box.value.trim();
+            Msg.diz(Session.get('nome'), ' disse: ', msg);
+            $msg_box.value = ''; 
+        }
+    };
+
     Template.entrada.events = {
         'click button#cria-sala' : function(e) {
             var nome = document.getElementById('nome-sala').value.trim();
-            Sala.set(nome);
+            if (Validation.sala_valida(nome))
+                Sala.set(nome);
         },
         'click a.entrar' : function() {
+            var sala = this.nome;
             var nome = document.getElementById('nome-usuario').value.trim();
-            var nome_sala = this.nome;
-            if (Validation.nome_valido(nome)) {
-                Nome.set(nome);
+            if (Validation.nome_valido(nome, sala)) {
+                Nome.set(nome, sala);
                 Session.set('entrou', true);
                 Session.set('nome', nome);
-                Session.set('sala', nome_sala);
-                Msg.diz(nome, ': ', 'Entrou na sala...', nome_sala);
+                Session.set('sala', sala);
+                Msg.diz(nome, ': ', 'Entrou na sala...', sala);
             } else {
                 alert(Validation.get_erro());
             }
         },
-        'click button#enviar' : function() {
-            var msg = document.getElementById('msg').value.trim();
-            Msg.diz(Session.get('nome'), ' disse: ', msg);
-        }
+        'click button#enviar' : enviar_msg,
+        'keydown #msg': enviar_msg
     };
 }
 
 if (Meteor.is_server) {
     Meteor.startup(function() {
-        // Nomes.remove({});
+        Nomes.remove({});
     });
     Meteor.methods({
-        sair : function(nome) {
-            return Nome.remove(nome);
+        sair : function(nome, sala) {
+            return Nome.remove(nome, sala);
             this.unblock();
         }
     });
