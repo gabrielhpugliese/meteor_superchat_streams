@@ -9,7 +9,8 @@ Msg = {
             user : nome,
             action : action,
             msg : msg,
-            sala : Session.get('sala')
+            sala : Session.get('sala'),
+            host: window.location.hostname
         });
     },
 };
@@ -30,7 +31,8 @@ Nome = {
     set : function(nome, sala) {
         return Nomes.insert({
             nome : nome,
-            sala : sala
+            sala : sala,
+            host : window.location.hostname
         });
     }
 };
@@ -86,6 +88,7 @@ Validation = {
 
 if (Meteor.is_client) {
     jQuery(window).unload(function() {
+        // This does not work :(
         Meteor.call('sair', Session.get('nome'), Session.get('sala'));
         console.log('bla');
     });
@@ -163,10 +166,11 @@ if (Meteor.is_client) {
 
 if (Meteor.is_server) {
     Meteor.startup(function() {
-        Nomes.remove({});
+        Nomes.remove({}); // Workaround to remove names from list
     });
     Meteor.methods({
         sair : function(nome, sala) {
+            // This does not work :(
             return Nome.remove(nome, sala);
             this.unblock();
         }
