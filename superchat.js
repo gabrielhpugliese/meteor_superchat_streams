@@ -110,6 +110,10 @@ if (Meteor.is_client) {
         }
         return false;
     };
+    
+    Template.entrada.sala_atual = function() {
+        return Session.get('sala');
+    }
 
     Template.entrada.scroll_to_bottom = function() {
         Meteor.defer(function() {
