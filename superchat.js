@@ -10,7 +10,7 @@ Msg = {
             action : action,
             msg : msg,
             sala : Session.get('sala'),
-            host: window.location.hostname
+            host: window.parent.location.hostname
         });
     },
 };
@@ -32,7 +32,7 @@ Nome = {
         return Nomes.insert({
             nome : nome,
             sala : sala,
-            host : window.location.hostname
+            host : window.parent.location.hostname
         });
     }
 };
