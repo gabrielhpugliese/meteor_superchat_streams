@@ -65,13 +65,10 @@ Validation = {
 };
 
 if (Meteor.is_client) {
-    window.onbeforeunload = function(e) {
-        var message = "Your confirmation message goes here.";
-        var nome = Session.get('nome');
-        Nome.remove(nome);
-        Meteor.flush();
-        return message;
-    };
+    jQuery(window).unload(function() {
+        Meteor.call('sair', Session.get('nome'));
+        console.log('bla');
+    });
 
     Template.entrada.msgs = function() {
         return Msgs.find({
@@ -133,5 +130,11 @@ if (Meteor.is_client) {
 if (Meteor.is_server) {
     Meteor.startup(function() {
         // Nomes.remove({});
+    });
+    Meteor.methods({
+        sair : function(nome) {
+            return Nome.remove(nome);
+            this.unblock();
+        }
     });
 }
