@@ -3,6 +3,12 @@ Nomes = new Meteor.Collection("nomes");
 Msgs = new Meteor.Collection("msgs");
 Salas = new Meteor.Collection("salas");
 
+get_parent_param = function(){
+    // This is used when inside an iframe
+    var parent = window.location.href.split('parent=')[1];
+    return parent ? parent : window.location.hostname;
+}
+
 Msg = {
     diz : function(nome, action, msg) {
         return Msgs.insert({
@@ -10,7 +16,7 @@ Msg = {
             action : action,
             msg : msg,
             sala : Session.get('sala'),
-            host: window.parent.location.hostname
+            host: get_parent_param()
         });
     },
 };
@@ -19,20 +25,22 @@ Nome = {
     remove : function(nome, sala) {
         return Nomes.remove({
             nome : nome,
-            sala : sala
+            sala : sala,
+            host : get_parent_param()
         });
     },
     get : function(nome, sala) {
         return Nomes.findOne({
             nome : nome,
-            sala : sala
+            sala : sala,
+            host : get_parent_param()
         });
     },
     set : function(nome, sala) {
         return Nomes.insert({
             nome : nome,
             sala : sala,
-            host : window.parent.location.hostname
+            host : get_parent_param()
         });
     }
 };
@@ -40,12 +48,14 @@ Nome = {
 Sala = {
     set : function(nome) {
         return Salas.insert({
-            nome : nome
+            nome : nome,
+            host : get_parent_param()
         });
     },
     get : function(nome) {
         return Salas.findOne({
-            nome : nome
+            nome : nome,
+            host : get_parent_param()
         });
     }
 }
@@ -95,16 +105,21 @@ if (Meteor.is_client) {
 
     Template.entrada.msgs = function() {
         return Msgs.find({
-            'sala' : Session.get('sala')
+            sala : Session.get('sala'),
+            host : get_parent_param()
         });
     };
 
     Template.entrada.salas = function() {
-        return Salas.find({});
+        return Salas.find({
+            host : get_parent_param()
+        });
     };
 
     Template.entrada.usuarios = function() {
-        return Nomes.find({});
+        return Nomes.find({
+            host : get_parent_param()
+        });
     };
 
     Template.entrada.entrou = function() {
