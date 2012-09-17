@@ -26,29 +26,15 @@
     <button id="enviar">
         Enviar
     </button>
-    <div id="usuarios">
-        <ul>
-            {{#each usuarios}}
-            <li>
-                {{nome}}
-            </li>
-            {{/each}}
-        </ul>
-    </div>
+
     {{/if}}
 
     {{#unless entrou}}
     <div id="salas">
     <p>Seu nome:</p>
     <input id="nome-usuario" type="text" />
-    <p>Salas:</p>
-    <ul>
-        {{#each salas}}
-        <li><a id="{{nome}}" href="#" class="entrar" onclick="return(false);">{{nome}}</a></li>
-        {{/each}}
-    </ul>
-    <input id="nome-sala" type="text" />
-    <button id="cria-sala">Criar</button> 
+
+    <button id="entrar">Entrar</button> 
     </div>
     {{/unless}}
 </template>

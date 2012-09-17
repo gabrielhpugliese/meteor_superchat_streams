@@ -37,6 +37,11 @@ Sala = {
         return Salas.insert({
             nome : nome
         });
+    },
+    get : function(nome) {
+        return Salas.findOne({
+            nome : nome
+        });
     }
 }
 
@@ -58,6 +63,14 @@ Validation = {
         }
         if (Nome.get(nome)) {
             this.set_erro('Nome ja esta sendo usado');
+            return false;
+        }
+        return true;
+    },
+    sala_valida : function(nome) {
+        this.clear_erro();
+        if (nome.length == 0) {
+            this.set_erro('Nome da sala nao pode ser vazio');
             return false;
         }
         return true;
@@ -103,15 +116,12 @@ if (Meteor.is_client) {
     };
 
     Template.entrada.events = {
-        'click button#cria-sala' : function(e) {
-            var nome = document.getElementById('nome-sala').value.trim();
-            Sala.set(nome);
-        },
-        'click a.entrar' : function() {
+        'click button#entrar' : function() {
             var nome = document.getElementById('nome-usuario').value.trim();
-            var nome_sala = this.nome;
-            if (Validation.nome_valido(nome)) {
+            var nome_sala = window.location.href;
+            if (Validation.nome_valido(nome) && Validation.sala_valida(nome_sala)) {
                 Nome.set(nome);
+                Sala.set(nome_sala);
                 Session.set('entrou', true);
                 Session.set('nome', nome);
                 Session.set('sala', nome_sala);
@@ -129,7 +139,7 @@ if (Meteor.is_client) {
 
 if (Meteor.is_server) {
     Meteor.startup(function() {
-        // Nomes.remove({});
+        Nomes.remove({});
     });
     Meteor.methods({
         sair : function(nome) {
