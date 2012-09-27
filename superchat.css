@@ -37,6 +37,7 @@ body {
     text-shadow: 1px 1px 0px #cc9f52;
     float: right;
     margin-top: 5px;
+    cursor: pointer;
 }
 
 .msg-send:hover {
@@ -111,6 +112,7 @@ input {
     padding: 3px 24px;
     text-decoration: none;
     text-shadow: 1px 1px 0px #528ecc;
+    cursor: pointer;
 }
 .room-create:hover {
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #80b5ea), color-stop(1, #bddbfa) );
