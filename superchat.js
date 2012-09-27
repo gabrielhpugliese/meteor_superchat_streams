@@ -222,8 +222,16 @@ if (Meteor.is_client) {
                 alert(Validation.get_error());
             }
         },
-        'click button.send' : send_msg,
-        'keydown #msg': send_msg
+        'click button.msg-send' : send_msg,
+        'keydown #msg': send_msg,
+        'click button.room-exit' : function() {
+            var name = Session.get('name'),
+                room = Session.get('room');
+            Msg.says(name, ' ', 'left room...', room);
+            Name.remove(name, room);
+            Session.set('joined', false);
+            Session.set('room', '');
+        }
     };
 }
 
