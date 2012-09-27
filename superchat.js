@@ -5,8 +5,28 @@ Salas = new Meteor.Collection("salas");
 
 get_parent_param = function(){
     // This is used when inside an iframe
-    var parent = window.location.href.split('parent=')[1];
+    var parent;
+    try{
+        parent = get_params()['parent'];
+    } catch(err) {
+    }
     return parent ? parent : window.location.hostname;
+}
+
+get_params = function(){
+    var params = window.location.href.split('?'),
+        params_dict = Object(),
+        p_split;
+    if (params.length == 2){
+        params = params[1].split('&');
+        for(var i in params){
+            if (params.hasOwnProperty(i)){
+                p_split = params[i].split('=');
+                params_dict[p_split[0]] = p_split[1];
+            }
+        }
+    }
+    return params_dict;
 }
 
 Msg = {
@@ -16,7 +36,7 @@ Msg = {
             action : action,
             msg : msg,
             sala : Session.get('sala'),
-            host: get_parent_param()
+            host: PARENT
         });
     },
 };
@@ -26,21 +46,21 @@ Nome = {
         return Nomes.remove({
             nome : nome,
             sala : sala,
-            host : get_parent_param()
+            host : PARENT
         });
     },
     get : function(nome, sala) {
         return Nomes.findOne({
             nome : nome,
             sala : sala,
-            host : get_parent_param()
+            host : PARENT
         });
     },
     set : function(nome, sala) {
         return Nomes.insert({
             nome : nome,
             sala : sala,
-            host : get_parent_param()
+            host : PARENT
         });
     }
 };
@@ -49,13 +69,13 @@ Sala = {
     set : function(nome) {
         return Salas.insert({
             nome : nome,
-            host : get_parent_param()
+            host : PARENT
         });
     },
     get : function(nome) {
         return Salas.findOne({
             nome : nome,
-            host : get_parent_param()
+            host : PARENT
         });
     }
 }
@@ -97,28 +117,32 @@ Validation = {
 };
 
 if (Meteor.is_client) {
-    jQuery(window).unload(function() {
+    var PARENT = get_parent_param();
+    // jQuery(window).unload(function() {
+    window.onbeforeunload = function(){
         // This does not work :(
-        Meteor.call('sair', Session.get('nome'), Session.get('sala'));
-        console.log('bla');
-    });
-
+        // Meteor.call('sair', Session.get('nome'), Session.get('sala'));
+        var teste = Nome.remove(Session.get('nome'), Session.get('sala'));
+        // var teste = 'teste';
+        return teste.toString();
+    };
+    
     Template.entrada.msgs = function() {
         return Msgs.find({
             sala : Session.get('sala'),
-            host : get_parent_param()
+            host : PARENT
         });
     };
 
     Template.entrada.salas = function() {
         return Salas.find({
-            host : get_parent_param()
+            host : PARENT
         });
     };
 
     Template.entrada.usuarios = function() {
         return Nomes.find({
-            host : get_parent_param()
+            host : PARENT
         });
     };
 
@@ -186,8 +210,9 @@ if (Meteor.is_server) {
     Meteor.methods({
         sair : function(nome, sala) {
             // This does not work :(
-            return Nome.remove(nome, sala);
             this.unblock();
+            return Nome.remove(nome, sala);
+            
         }
     });
 }
