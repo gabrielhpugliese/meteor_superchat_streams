@@ -1,7 +1,7 @@
 // Collections
-Nomes = new Meteor.Collection("nomes");
+Names = new Meteor.Collection("names");
 Msgs = new Meteor.Collection("msgs");
-Salas = new Meteor.Collection("salas");
+Rooms = new Meteor.Collection("rooms");
 
 get_parent_param = function(){
     // This is used when inside an iframe
@@ -30,86 +30,86 @@ get_params = function(){
 }
 
 Msg = {
-    diz : function(nome, action, msg) {
+    says : function(name, action, msg) {
         return Msgs.insert({
-            user : nome,
+            user : name,
             action : action,
             msg : msg,
-            sala : Session.get('sala'),
+            room : Session.get('room'),
             host: PARENT
         });
     },
 };
 
-Nome = {
-    remove : function(nome, sala) {
-        return Nomes.remove({
-            nome : nome,
-            sala : sala,
+Name = {
+    remove : function(name, room) {
+        return Names.remove({
+            name : name,
+            room : room,
             host : PARENT
         });
     },
-    get : function(nome, sala) {
-        return Nomes.findOne({
-            nome : nome,
-            sala : sala,
+    get : function(name, room) {
+        return Names.findOne({
+            name : name,
+            room : room,
             host : PARENT
         });
     },
-    set : function(nome, sala) {
-        return Nomes.insert({
-            nome : nome,
-            sala : sala,
+    set : function(name, room) {
+        return Names.insert({
+            name : name,
+            room : room,
             host : PARENT
         });
     }
 };
 
-Sala = {
-    set : function(nome) {
-        return Salas.insert({
-            nome : nome,
+Room = {
+    set : function(name) {
+        return Rooms.insert({
+            name : name,
             host : PARENT
         });
     },
-    get : function(nome) {
-        return Salas.findOne({
-            nome : nome,
+    get : function(name) {
+        return Rooms.findOne({
+            name : name,
             host : PARENT
         });
     }
 }
 
 Validation = {
-    get_erro : function(msg) {
-        return Session.get('erro');
+    get_error : function(msg) {
+        return Session.get('error');
     },
-    set_erro : function(msg) {
-        return Session.set('erro', msg);
+    set_error : function(msg) {
+        return Session.set('error', msg);
     },
-    clear_erro : function() {
-        return Session.set('erro', undefined);
+    clear_error : function() {
+        return Session.set('error', undefined);
     },
-    nome_valido : function(nome, sala) {
-        this.clear_erro();
-        if (nome.length == 0) {
-            this.set_erro('Nome nao pode ser vazio');
+    name_valid : function(name, room) {
+        this.clear_error();
+        if (name.length == 0) {
+            this.set_error('Name cannot be blank.');
             return false;
         }
-        if (Nome.get(nome, sala)) {
-            this.set_erro('Nome ja esta sendo usado');
+        if (Name.get(name, room)) {
+            this.set_error('Name already being used.');
             return false;
         }
         return true;
     },
-    sala_valida : function(nome) {
-        this.clear_erro();
-        if (nome.length == 0) {
-            this.set_erro('Nome da sala nao pode ser vazio');
+    room_valid : function(name) {
+        this.clear_error();
+        if (name.length == 0) {
+            this.set_error('Room name cannot be blank.');
             return false;
         }
-        if (Sala.get(nome)) {
-            this.set_erro('Nome da sala ja esta sendo usado');
+        if (Room.get(name)) {
+            this.set_error('Room name already being used.');
             return false;
         }
         return true;
@@ -121,43 +121,44 @@ if (Meteor.is_client) {
     // jQuery(window).unload(function() {
     window.onbeforeunload = function(){
         // This does not work :(
-        // Meteor.call('sair', Session.get('nome'), Session.get('sala'));
-        var teste = Nome.remove(Session.get('nome'), Session.get('sala'));
+        // Meteor.call('sair', Session.get('name'), Session.get('room'));
+        var test = Name.remove(Session.get('name'), Session.get('room'));
         // var teste = 'teste';
-        return teste.toString();
+        return test.toString();
     };
     
-    Template.entrada.msgs = function() {
-        return Msgs.find({
-            sala : Session.get('sala'),
+
+    Template.entrance.rooms = function() {
+        return Rooms.find({
             host : PARENT
         });
     };
 
-    Template.entrada.salas = function() {
-        return Salas.find({
+    Template.entrance.users = function() {
+        return Names.find({
             host : PARENT
         });
     };
 
-    Template.entrada.usuarios = function() {
-        return Nomes.find({
-            host : PARENT
-        });
-    };
-
-    Template.entrada.entrou = function() {
-        if (Session.get('entrou')) {
+    Template.entrance.entered = function() {
+        if (Session.get('entered')) {
             return true;
         }
         return false;
     };
     
-    Template.entrada.sala_atual = function() {
-        return Session.get('sala');
-    }
+    Template.chatroom.msgs = function() {
+        return Msgs.find({
+            room : Session.get('room'),
+            host : PARENT
+        });
+    };
+    
+    Template.chatroom.room_actual = function() {
+        return Session.get('room');
+    };
 
-    Template.entrada.scroll_to_bottom = function() {
+    Template.chatroom.scroll_to_bottom = function() {
         Meteor.defer(function() {
             try {
                 var chat = document.getElementById('chat');
@@ -168,50 +169,50 @@ if (Meteor.is_client) {
         });
     };
 
-    enviar_msg = function(e) {
+    send_msg = function(e) {
         e = e || event;
         if ((e.keyCode || event.which || event.charCode || 0) == 13 ||
             e.type == 'click') {
             var $msg_box = document.getElementById('msg');
             var msg = $msg_box.value.trim();
-            Msg.diz(Session.get('nome'), ' disse: ', msg);
+            Msg.says(Session.get('name'), ' says: ', msg);
             $msg_box.value = ''; 
         }
     };
 
-    Template.entrada.events = {
-        'click button#cria-sala' : function(e) {
-            var nome = document.getElementById('nome-sala').value.trim();
-            if (Validation.sala_valida(nome))
-                Sala.set(nome);
+    Template.entrance.events = {
+        'click button#room-create' : function(e) {
+            var name = document.getElementById('room-name').value.trim();
+            if (Validation.room_valid(name))
+                Room.set(name);
         },
-        'click a.entrar' : function() {
-            var sala = this.nome;
-            var nome = document.getElementById('nome-usuario').value.trim();
-            if (Validation.nome_valido(nome, sala)) {
-                Nome.set(nome, sala);
-                Session.set('entrou', true);
-                Session.set('nome', nome);
-                Session.set('sala', sala);
-                Msg.diz(nome, ': ', 'Entrou na sala...', sala);
+        'click a.enter' : function() {
+            var room = this.name;
+            var name = document.getElementById('user-name').value.trim();
+            if (Validation.name_valid(name, room)) {
+                Name.set(name, room);
+                Session.set('entered', true);
+                Session.set('name', name);
+                Session.set('room', room);
+                Msg.says(name, ': ', 'Entered in room...', room);
             } else {
-                alert(Validation.get_erro());
+                alert(Validation.get_error());
             }
         },
-        'click button#enviar' : enviar_msg,
-        'keydown #msg': enviar_msg
+        'click button#send' : send_msg,
+        'keydown #msg': send_msg
     };
 }
 
 if (Meteor.is_server) {
     Meteor.startup(function() {
-        Nomes.remove({}); // Workaround to remove names from list
+        Names.remove({}); // Workaround to remove names from list
     });
     Meteor.methods({
-        sair : function(nome, sala) {
+        sair : function(name, room) {
             // This does not work :(
             this.unblock();
-            return Nome.remove(nome, sala);
+            return Name.remove(name, room);
             
         }
     });
