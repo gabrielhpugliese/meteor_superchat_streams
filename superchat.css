@@ -59,9 +59,10 @@ body {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     border: 3px solid #cccccc;
-    background-color: }
+    background-color: #DCECFB;
+}
 
-    #msg-wrap {
+#msg-wrap {
     height: 1px;
 }
 
@@ -191,6 +192,7 @@ li:hover {
     text-shadow: 1px 1px 0px #810e05;
     float: right;
     margin-left: 5px;
+    cursor: pointer;
 }
 .room-exit:hover {
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
