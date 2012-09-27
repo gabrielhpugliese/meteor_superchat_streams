@@ -13,22 +13,22 @@
 
 <template name="entrance">
 
-    {{#unless entered}}
+    {{#unless joined}}
     <div id="rooms">
     <p>Your name:</p>
     <input id="user-name" type="text" />
     <p>Rooms:</p>
     <ul>
         {{#each rooms}}
-        <li><a id="{{name}}" href="#" class="enter" onclick="return(false);">{{name}}</a></li>
+        <li>{{name}}<button id="{{name}}" href="" class="room-enter" onclick="return(false);">join</button></li>
         {{/each}}
     </ul>
     <input id="room-name" type="text" />
-    <button id="room-create">Create</button> 
+    <button class="room-create">Create</button> 
     </div>
     {{/unless}}
     
-    {{#if entered}}
+    {{#if joined}}
         {{> chatroom }}
     {{/if}}
     
@@ -37,7 +37,7 @@
 <template name="chatroom">
     
     <h3>Room: {{room_actual}}</h3>
-    <div id="chat" style="height:200px; width: 400px; border: 2px black solid; overflow: scroll;">
+    <div id="chat">
         {{#each msgs}}
         <p>
             {{user}}{{action}}{{msg}}
@@ -45,10 +45,12 @@
         {{scroll_to_bottom}}
         {{/each}}
     </div>
-    <input type="text" id="msg" />
-    <button id="send">
-        Send
-    </button>
+    <div id="msg-wrap">
+        <textarea cols="35" rows="4" type="text" id="msg" ></textarea>
+        <button class="send">
+            Send
+        </button>
+    </div>
     
 </template>
 
