@@ -92,16 +92,16 @@ Validation = {
     },
     name_valid : function(name, room) {
         this.clear_error();
+        if (!Meteor.user()){
+            this.set_error('Please login first.');
+            return false;
+        }
         if (name.length == 0) {
             this.set_error('Name cannot be blank.');
             return false;
         }
         if (Name.get(name, room)) {
             this.set_error('Name already being used.');
-            return false;
-        }
-        if (name.length > 20){
-            this.set_error('Name must contain 20 chars max.');
             return false;
         }
         return true;
@@ -116,7 +116,7 @@ Validation = {
             this.set_error('Room name already being used.');
             return false;
         }
-        if (name.length > 20){
+        if (name.length > 50){
             this.set_error('Room name must contain 20 chars max.');
             return false;
         }
@@ -124,28 +124,17 @@ Validation = {
     }
 };
 
-function freezeScreen(ms){
-
-    var s=(new Date).getTime();
-
-    while(((new Date).getTime())-s<ms){}
-
-    return 'Bla';
-};
-
-if (Meteor.is_client) {
+if (Meteor.isClient) {
     var PARENT = get_parent_param();
-    // jQuery(window).unload(function() {
-    window.onbeforeunload = function(){
-        // This does not work :(
-        Meteor.call('exit', Session.get('name'), Session.get('room'));
-        // var test0 = Name.remove(Session.get('name'), Session.get('room'));
-        var test = Name.get(Session.get('name'), Session.get('room'));
-        // var teste = 'teste';
-        console.log(test);
-        // return test.toString();
-    };
-    
+    Meteor.startup(function(){
+        Meteor.subscribe('rooms', PARENT, function(){
+            if (Rooms.find({host: PARENT}).count() == 0){
+                for (var i = 1; i < 6; i++){
+                    Room.set('Room #' + i);
+                }
+            } 
+        });  
+    });
 
     Template.entrance.rooms = function() {
         return Rooms.find({
@@ -200,18 +189,11 @@ if (Meteor.is_client) {
     };
 
     Template.entrance.events = {
-        'click button.room-create' : function(e) {
-            var $room_name_input = document.getElementById('room-name'),
-                name = $room_name_input.value.trim();
-            if (Validation.room_valid(name))
-                Room.set(name);
-            else
-                alert(Validation.get_error());
-            $room_name_input.value = '';
-        },
         'click button.room-enter' : function() {
-            var room = this.name;
-            var name = document.getElementById('user-name').value.trim();
+            var room = this.name,
+                name;
+            if (Meteor.user())
+                name = Meteor.user()['profile']['name'];
             if (Validation.name_valid(name, room)) {
                 Name.set(name, room);
                 Session.set('joined', true);
@@ -235,16 +217,8 @@ if (Meteor.is_client) {
     };
 }
 
-if (Meteor.is_server) {
-    Meteor.startup(function() {
-        // Names.remove({}); // Workaround to remove names from list
-    });
-    Meteor.methods({
-        exit : function(name, room) {
-            // This does not work :(
-            this.unblock();
-            return Name.remove(name, room);
-            
-        }
+if (Meteor.isServer) {
+    Meteor.publish("rooms", function (host) {
+        return Rooms.find({host: host});
     });
 }

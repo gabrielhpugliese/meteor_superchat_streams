@@ -15,16 +15,13 @@
 
     {{#unless joined}}
     <div id="rooms">
-    <p>Your name:</p>
-    <input id="user-name" type="text" />
+    {{loginButtons}}
     <p>Rooms:</p>
     <ul>
         {{#each rooms}}
         <li>{{name}}<button id="{{name}}" href="" class="room-enter" onclick="return(false);">join</button></li>
         {{/each}}
     </ul>
-    <input id="room-name" type="text" />
-    <button class="room-create">Create</button> 
     </div>
     {{/unless}}
     
