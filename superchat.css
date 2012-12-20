@@ -63,6 +63,10 @@ body {
     background-color: #DCECFB;
 }
 
+#chat p {
+    font-size: 15px;
+}
+
 #msg-wrap {
     height: 1px;
 }
