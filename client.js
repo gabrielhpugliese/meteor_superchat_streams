@@ -60,7 +60,8 @@ if (Meteor.isClient) {
     };
     
     Template.chatroom.get_pic_square = function(user_id) {
-        var profile = Profile.get(user_id);
+        var profile = Meteor.users.findOne(user_id);
+        
         if (profile && profile['pic_square'])
             return profile['pic_square'];
         return;

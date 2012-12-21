@@ -25,6 +25,22 @@ get_facebook_me = function(user_id) {
     return me;
 };
 
+save_pic_square = function(user){
+    var user = Meteor.users.findOne(user['_id']),
+        pic_square;
+    
+    if (user['profile']['pic_square'])
+        return;
+        
+    if ('facebook' in user['services']){
+        var fql = 'SELECT name, pic_square FROM user WHERE uid = me()',
+            response = get_facebook_data(user['_id'], null, fql);
+        pic_square = response['data']['data'][0]['pic_square'];
+    }
+    
+    user['profile']['pic_square'] = pic_square
+}
+
 
 if (Meteor.isServer) {
     Meteor.publish('Rooms', function (host) {
@@ -45,10 +61,10 @@ if (Meteor.isServer) {
         
     Meteor.users.find().observe({
         changed : function(user) {
-            get_facebook_me(user['_id']);
+            save_pic_square(user);
         },
         added : function(user) {
-            get_facebook_me(user['_id']);
+            save_pic_square(user);
         }
     });
     

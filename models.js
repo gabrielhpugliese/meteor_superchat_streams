@@ -30,17 +30,3 @@ Room = {
         });
     }
 }
-
-Profile = {
-    set : function(user_id, profile){
-        return Profiles.insert({
-            user_id : user_id,
-            pic_square : profile['pic_square'],
-            name : profile['name'],
-            uid : profile['uid']
-        });
-    },
-    get : function(user_id){
-        return Profiles.findOne({user_id: user_id});
-    }
-}
