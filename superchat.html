@@ -37,7 +37,7 @@
     <div id="chat">
         {{#each msgs}}
         <p>
-            {{user}}{{action}}{{msg}}
+            <img src='{{get_pic_square user_id}}' />{{user_name}}{{action}}{{msg}}
         </p>
         {{scroll_to_bottom}}
         {{/each}}

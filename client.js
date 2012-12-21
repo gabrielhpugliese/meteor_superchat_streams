@@ -24,13 +24,14 @@ get_params = function(){
     return params_dict;
 }
 
-
 if (Meteor.isClient) {
     var PARENT = get_parent_param();
     
     Meteor.autosubscribe(function(){
         Meteor.subscribe('Rooms', PARENT);
+        Meteor.subscribe('Profiles');
     });
+
 
     Template.entrance.rooms = function() {
         return Rooms.find({
@@ -58,6 +59,13 @@ if (Meteor.isClient) {
         });
     };
     
+    Template.chatroom.get_pic_square = function(user_id) {
+        var profile = Profile.get(user_id);
+        if (profile && profile['pic_square'])
+            return profile['pic_square'];
+        return;
+    };
+    
     Template.chatroom.room_actual = function() {
         return Session.get('room');
     };
@@ -80,8 +88,9 @@ if (Meteor.isClient) {
                 msg = $msg_box.value.trim(),
                 room = Session.get('room');
                 
-            Meteor.call('says', msg, room, PARENT, function(){});
-            $msg_box.value = ''; 
+            Meteor.call('says', msg, room, PARENT, function(){
+                $msg_box.value = ''; 
+            });
         }
     };
 

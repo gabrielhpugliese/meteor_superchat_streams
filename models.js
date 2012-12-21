@@ -1,11 +1,13 @@
 // Collections
-Msgs = new Meteor.Collection("msgs");
-Rooms = new Meteor.Collection("rooms");
+Msgs = new Meteor.Collection('msgs');
+Rooms = new Meteor.Collection('rooms');
+Profiles = new Meteor.Collection('profiles');
 
 Msg = {
     set : function(name, action, msg, room, host) {
         return Msgs.insert({
-            user : name,
+            user_name : name,
+            user_id : Meteor.userId(),
             action : action,
             msg : msg,
             room : room,
@@ -26,5 +28,19 @@ Room = {
             name : name,
             host : host
         });
+    }
+}
+
+Profile = {
+    set : function(user_id, profile){
+        return Profiles.insert({
+            user_id : user_id,
+            pic_square : profile['pic_square'],
+            name : profile['name'],
+            uid : profile['uid']
+        });
+    },
+    get : function(user_id){
+        return Profiles.findOne({user_id: user_id});
     }
 }

@@ -67,6 +67,10 @@ body {
     font-size: 15px;
 }
 
+#chat img {
+    height: 30px;
+}
+
 #msg-wrap {
     height: 1px;
 }
