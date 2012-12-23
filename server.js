@@ -68,10 +68,10 @@ if (Meteor.isServer) {
             msg_set(' says: ', msg, room, host);
         },
         joined : function(room, host){
-            msg_set(' joined room...', '', room, host);
+            msg_set('', ' joined room...', room, host);
         },
         left : function(room, host){
-            msg_set(' left room...', '', room, host);
+            msg_set('', ' left room...', room, host);
         }
     });
     
