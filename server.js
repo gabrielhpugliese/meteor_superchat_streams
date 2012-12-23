@@ -58,7 +58,7 @@ if (Meteor.isServer) {
     
     msg_set = function(action, msg, room, host) {
         var user_name = Meteor.user()['profile']['name'];
-        if (!user_name)
+        if (!user_name || !msg)
             return;
         Msg.set(user_name, action, msg, room, host);
     }
