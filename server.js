@@ -1,18 +1,26 @@
-save_pic_square = function(user){
+save_profile = function(user){
     var user = Meteor.users.findOne(user['_id']),
-        pic_square;
+        pic_square,
+        id;
     
     if (user['profile']['pic_square'])
         return;
         
     if ('facebook' in user['services']){
-        pic_square = 'http://graph.facebook.com/'+user['services']['facebook']['id']+'/picture?type=square';
+        id = user['services']['facebook']['id'];
+        pic_square = 'http://graph.facebook.com/'+id+'/picture?type=square';
+        url = 'https://www.facebook.com/'+id;
     } else if ('google' in user['services']){
-        pic_square = 'https://www.google.com/s2/photos/profile/'+user['services']['google']['id'];
+        id = user['services']['google']['id'];
+        pic_square = 'https://www.google.com/s2/photos/profile/'+id;
+        url = 'https://plus.google.com/u/0/'+id;
     } else if ('twitter' in user['services']){
-        pic_square = 'https://api.twitter.com/1/users/profile_image/'+user['services']['twitter']['id'];
+        id = user['services']['twitter']['screenName'];
+        pic_square = 'https://api.twitter.com/1/users/profile_image/'+id;
+        url = 'https://twitter.com/'+id;
     }
     user['profile']['pic_square'] = pic_square;
+    user['profile']['url'] = url;
     
     return Meteor.users.update(user['_id'], {$set: {profile: user['profile']}});
 }
@@ -37,10 +45,10 @@ if (Meteor.isServer) {
         
     Meteor.users.find().observe({
         changed : function(user) {
-            save_pic_square(user);
+            save_profile(user);
         },
         added : function(user) {
-            save_pic_square(user);
+            save_profile(user);
         }
     });
     

@@ -69,6 +69,10 @@ body {
     margin-top: 1px;
 }
 
+#chat a {
+    text-decoration: none;
+}
+
 #chat img {
     height: 30px;
 }

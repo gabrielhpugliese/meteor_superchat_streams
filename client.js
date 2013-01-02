@@ -61,15 +61,27 @@ if (Meteor.isClient) {
     
     Template.chatroom.get_pic_square = function(user_id) {
         var profile;
-        console.log(user_id)
         try {
             profile = Meteor.users.findOne(user_id)['profile'];
         } catch (err) {
             return;
         }
-        console.log(Meteor.users.findOne(user_id))
+        
         if (profile && profile['pic_square'])
             return profile['pic_square'];
+        return;
+    };
+    
+    Template.chatroom.get_profile = function(user_id) {
+        var profile;
+        try {
+            profile = Meteor.users.findOne(user_id)['profile'];
+        } catch (err) {
+            return;
+        }
+        
+        if (profile && profile['url'])
+            return profile['url'];
         return;
     };
     
