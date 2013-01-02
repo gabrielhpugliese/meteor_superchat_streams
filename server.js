@@ -1,30 +1,3 @@
-get_facebook_data = function(user_id, path, fql) {
-    var token = Meteor.users.findOne(user_id).services.facebook.accessToken, 
-        fb_url = 'https://graph.facebook.com', 
-        response;
-        
-    if (path) {
-        response = Meteor.http.get(fb_url + path + '?access_token=' + encodeURIComponent(token));
-    } else {
-        response = Meteor.http.get(fb_url + '/fql?q=' + fql + '&access_token=' + encodeURIComponent(token));
-    }
-    return response;
-};
-
-get_facebook_me = function(user_id) {
-    var fql = 'SELECT name, pic_square, uid FROM user WHERE uid = me()',
-        me = Profile.get(user_id);
-    
-    if (!me){
-        var result = get_facebook_data(user_id, undefined, fql);
-        if ( !result.error && result['data'] ) {
-            // if successfully obtained facebook profile, save it off
-            Profile.set(user_id, result['data']['data'][0]);
-        }
-    }
-    return me;
-};
-
 save_pic_square = function(user){
     var user = Meteor.users.findOne(user['_id']),
         pic_square;
@@ -33,12 +6,15 @@ save_pic_square = function(user){
         return;
         
     if ('facebook' in user['services']){
-        var fql = 'SELECT name, pic_square FROM user WHERE uid = me()',
-            response = get_facebook_data(user['_id'], null, fql);
-        pic_square = response['data']['data'][0]['pic_square'];
+        pic_square = 'http://graph.facebook.com/'+user['services']['facebook']['id']+'/picture?type=square';
+    } else if ('google' in user['services']){
+        pic_square = 'https://www.google.com/s2/photos/profile/'+user['services']['google']['id'];
+    } else if ('twitter' in user['services']){
+        pic_square = 'https://api.twitter.com/1/users/profile_image/'+user['services']['twitter']['id'];
     }
+    user['profile']['pic_square'] = pic_square;
     
-    user['profile']['pic_square'] = pic_square
+    return Meteor.users.update(user['_id'], {$set: {profile: user['profile']}});
 }
 
 
@@ -55,8 +31,8 @@ if (Meteor.isServer) {
         return rooms;
     });
     
-    Meteor.publish('Profiles', function(){
-        return Profiles.find({}); 
+    Meteor.publish('Users', function(){
+        return Meteor.users.find({});
     });
         
     Meteor.users.find().observe({

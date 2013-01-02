@@ -29,7 +29,7 @@ if (Meteor.isClient) {
     
     Meteor.autosubscribe(function(){
         Meteor.subscribe('Rooms', PARENT);
-        Meteor.subscribe('Profiles');
+        Meteor.subscribe('Users');
     });
 
 
@@ -60,8 +60,14 @@ if (Meteor.isClient) {
     };
     
     Template.chatroom.get_pic_square = function(user_id) {
-        var profile = Meteor.users.findOne(user_id);
-        
+        var profile;
+        console.log(user_id)
+        try {
+            profile = Meteor.users.findOne(user_id)['profile'];
+        } catch (err) {
+            return;
+        }
+        console.log(Meteor.users.findOne(user_id))
         if (profile && profile['pic_square'])
             return profile['pic_square'];
         return;
