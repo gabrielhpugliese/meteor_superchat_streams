@@ -73,11 +73,11 @@ if (Meteor.isServer) {
         joined : function(room, host){
             if (!Presence.get(room, host).count()){
                 Presence.set(room, host);
-                msg_set(' joined room...', '', room, host);
+                msg_set('', ' joined room...', room, host);
             }
         },
         left : function(room, host){
-            msg_set(' left room...', '', room, host);
+            msg_set('', ' left room...', room, host);
             Presence.remove(room, host);
         }
     });
