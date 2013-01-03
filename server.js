@@ -1,30 +1,29 @@
-// get_facebook_data = function(user_id, path, fql) {
-    // var token = Meteor.users.findOne(user_id).services.facebook.accessToken, 
-        // fb_url = 'https://graph.facebook.com', 
-        // response;
-//         
-    // if (path) {
-        // response = Meteor.http.get(fb_url + path + '?access_token=' + encodeURIComponent(token));
-    // } else {
-        // response = Meteor.http.get(fb_url + '/fql?q=' + fql + '&access_token=' + encodeURIComponent(token));
-    // }
-    // return response;
-// };
-// 
-// get_facebook_me = function(user_id) {
-    // var fql = 'SELECT name, pic_square, uid FROM user WHERE uid = me()',
-        // me = Profile.get(user_id);
-//     
-    // if (!me){
-        // var result = get_facebook_data(user_id, undefined, fql);
-        // if ( !result.error && result['data'] ) {
-            // // if successfully obtained facebook profile, save it off
-            // Profile.set(user_id, result['data']['data'][0]);
-        // }
-    // }
-    // return me;
-// };
-
+save_profile = function(user){
+    var user = Meteor.users.findOne(user['_id']),
+        pic_square,
+        id;
+    
+    if (user['profile']['pic_square'])
+        return;
+        
+    if ('facebook' in user['services']){
+        id = user['services']['facebook']['id'];
+        pic_square = 'http://graph.facebook.com/'+id+'/picture?type=square';
+        url = 'https://www.facebook.com/'+id;
+    } else if ('google' in user['services']){
+        id = user['services']['google']['id'];
+        pic_square = 'https://www.google.com/s2/photos/profile/'+id;
+        url = 'https://plus.google.com/u/0/'+id;
+    } else if ('twitter' in user['services']){
+        id = user['services']['twitter']['screenName'];
+        pic_square = 'https://api.twitter.com/1/users/profile_image/'+id;
+        url = 'https://twitter.com/'+id;
+    }
+    user['profile']['pic_square'] = pic_square;
+    user['profile']['url'] = url;
+    
+    return Meteor.users.update(user['_id'], {$set: {profile: user['profile']}});
+}
 
 if (Meteor.isServer) {
     Meteor.publish('Rooms', function (host) {
@@ -39,21 +38,25 @@ if (Meteor.isServer) {
         return rooms;
     });
     
-    Meteor.publish('Profiles', function(){
-        return Profiles.find({}); 
+    Meteor.publish('Users', function(){
+        return Meteor.users.find({});
     });
         
-    // Meteor.users.find().observe({
-        // changed : function(user) {
-            // get_facebook_me(user['_id']);
-        // },
-        // added : function(user) {
-            // get_facebook_me(user['_id']);
-        // }
-    // });
-//     
+    Meteor.users.find().observe({
+        changed : function(user) {
+            save_profile(user);
+        },
+        added : function(user) {
+            save_profile(user);
+        }
+    });
+    
     Meteor.publish('Msgs', function (room, host) {
         return Msgs.find({room: room, host: host}); 
+    });
+    
+    Meteor.publish('Presences', function(host){
+        return Presences.find({host: host}); 
     });
     
     msg_set = function(action, msg, room, host) {
@@ -68,10 +71,14 @@ if (Meteor.isServer) {
             msg_set(' says: ', msg, room, host);
         },
         joined : function(room, host){
-            msg_set('', ' joined room...', room, host);
+            if (!Presence.get(room, host).count()){
+                Presence.set(room, host);
+                msg_set(' joined room...', '', room, host);
+            }
         },
         left : function(room, host){
-            msg_set('', ' left room...', room, host);
+            msg_set(' left room...', '', room, host);
+            Presence.remove(room, host);
         }
     });
     

@@ -65,6 +65,12 @@ body {
 
 #chat p {
     font-size: 15px;
+    margin-bottom: 4px;
+    margin-top: 1px;
+}
+
+#chat a {
+    text-decoration: none;
 }
 
 #chat img {

@@ -26,12 +26,28 @@ get_params = function(){
 
 if (Meteor.isClient) {
     var PARENT = get_parent_param();
-    
-    Meteor.autosubscribe(function(){
-        Meteor.subscribe('Rooms', PARENT);
-        Meteor.subscribe('Profiles');
+    Meteor.startup(function(){
+        Session.set('presence', false);
+        Meteor.autosubscribe(function(){
+            Meteor.subscribe('Rooms', PARENT);
+            Meteor.subscribe('Users');
+            Meteor.subscribe('Presences', PARENT, function(){
+                Session.set('presence', true);
+            });
+        });
     });
 
+    Template.entrance.created = function() {
+        Meteor.autorun(function(){
+            if (Session.get('presence')){
+                Session.set('presence', false);
+                var presence = Presences.find({}).fetch();
+                if (presence.length > 0) {
+                    join_room(presence[0]['room']);
+                }
+            }
+        });
+    }
 
     Template.entrance.rooms = function() {
         return Rooms.find({
@@ -46,10 +62,7 @@ if (Meteor.isClient) {
     };
 
     Template.entrance.joined = function() {
-        if (Session.get('joined')) {
-            return true;
-        }
-        return false;
+        return Session.get('joined');
     };
     
     Template.chatroom.msgs = function() {
@@ -60,9 +73,28 @@ if (Meteor.isClient) {
     };
     
     Template.chatroom.get_pic_square = function(user_id) {
-        var profile = Profile.get(user_id);
+        var profile;
+        try {
+            profile = Meteor.users.findOne(user_id)['profile'];
+        } catch (err) {
+            return;
+        }
+        
         if (profile && profile['pic_square'])
             return profile['pic_square'];
+        return;
+    };
+    
+    Template.chatroom.get_profile = function(user_id) {
+        var profile;
+        try {
+            profile = Meteor.users.findOne(user_id)['profile'];
+        } catch (err) {
+            return;
+        }
+        
+        if (profile && profile['url'])
+            return profile['url'];
         return;
     };
     
@@ -93,6 +125,15 @@ if (Meteor.isClient) {
             });
         }
     };
+    
+    join_room = function(room){
+        Session.set('joined', true);
+        Session.set('room', room);
+        Meteor.autosubscribe(function(){
+            Meteor.subscribe('Msgs', room, PARENT);
+        });
+        Meteor.call('joined', room, PARENT, function(){});
+    }
 
     Template.entrance.events = {
         'click button.room-enter' : function() {
@@ -102,12 +143,7 @@ if (Meteor.isClient) {
                 name = Meteor.user()['profile']['name'];
             else return;
                 
-            Session.set('joined', true);
-            Session.set('room', room);
-            Meteor.autosubscribe(function(){
-                Meteor.subscribe('Msgs', room, PARENT);
-            });
-            Meteor.call('joined', room, PARENT, function(){});
+            join_room(room);
         },
         'click button.msg-send' : send_msg,
         'keydown #msg': send_msg,
