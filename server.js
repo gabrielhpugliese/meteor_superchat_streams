@@ -56,6 +56,10 @@ if (Meteor.isServer) {
         return Msgs.find({room: room, host: host}); 
     });
     
+    Meteor.publish('Presences', function(host){
+        return Presences.find({host: host}); 
+    });
+    
     msg_set = function(action, msg, room, host) {
         var user_name = Meteor.user()['profile']['name'];
         if (!user_name)
@@ -68,10 +72,14 @@ if (Meteor.isServer) {
             msg_set(' says: ', msg, room, host);
         },
         joined : function(room, host){
-            msg_set(' joined room...', '', room, host);
+            if (!Presence.get(room, host).count()){
+                Presence.set(room, host);
+                msg_set(' joined room...', '', room, host);
+            }
         },
         left : function(room, host){
             msg_set(' left room...', '', room, host);
+            Presence.remove(room, host);
         }
     });
     

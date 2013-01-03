@@ -1,7 +1,7 @@
 // Collections
 Msgs = new Meteor.Collection('msgs');
 Rooms = new Meteor.Collection('rooms');
-Profiles = new Meteor.Collection('profiles');
+Presences = new Meteor.Collection('people');
 
 Msg = {
     set : function(name, action, msg, room, host) {
@@ -31,3 +31,26 @@ Room = {
     }
 }
 
+Presence = {
+    set : function(room, host) {
+        return Presences.insert({
+            user_id : Meteor.userId(),
+            room : room,
+            host : host
+        });
+    },
+    get : function(room, host) {
+        return Presences.find({
+            user_id : Meteor.userId(),
+            room : room,
+            host : host
+        });
+    },
+    remove : function(room, host) {
+        return Presences.remove({
+            user_id : Meteor.userId(),
+            room : room,
+            host : host
+        });
+    }
+}
