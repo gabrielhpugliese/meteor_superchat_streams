@@ -2,10 +2,10 @@ save_profile = function(user){
     var user = Meteor.users.findOne(user['_id']),
         pic_square,
         id;
-    
+
     if (user['profile']['pic_square'])
         return;
-        
+
     if ('facebook' in user['services']){
         id = user['services']['facebook']['id'];
         pic_square = 'http://graph.facebook.com/'+id+'/picture?type=square';
@@ -21,8 +21,15 @@ save_profile = function(user){
     }
     user['profile']['pic_square'] = pic_square;
     user['profile']['url'] = url;
-    
+
     return Meteor.users.update(user['_id'], {$set: {profile: user['profile']}});
+}
+
+msg_set = function(action, msg, room, host) {
+    var user_name = Meteor.user()['profile']['name'];
+    if (!user_name || !msg)
+        return;
+    Msg.set(user_name, action, msg, room, host);
 }
 
 if (Meteor.isServer) {
@@ -37,11 +44,11 @@ if (Meteor.isServer) {
         }
         return rooms;
     });
-    
+
     Meteor.publish('Users', function(){
         return Meteor.users.find({});
     });
-        
+
     Meteor.users.find().observe({
         changed : function(user) {
             save_profile(user);
@@ -50,22 +57,15 @@ if (Meteor.isServer) {
             save_profile(user);
         }
     });
-    
+
     Meteor.publish('Msgs', function (room, host) {
-        return Msgs.find({room: room, host: host}); 
+        return Msgs.find({room: room, host: host});
     });
-    
-    Meteor.publish('Presences', function(host){
-        return Presences.find({host: host}); 
+
+    Meteor.publish('Presences', function(user_id, host){
+        return Presences.find({user_id: user_id, host: host});
     });
-    
-    msg_set = function(action, msg, room, host) {
-        var user_name = Meteor.user()['profile']['name'];
-        if (!user_name || !msg)
-            return;
-        Msg.set(user_name, action, msg, room, host);
-    }
-    
+
     Meteor.methods({
         says : function(msg, room, host){
             msg_set(' says: ', msg, room, host);
@@ -79,9 +79,16 @@ if (Meteor.isServer) {
         left : function(room, host){
             msg_set('', ' left room...', room, host);
             Presence.remove(room, host);
+        },
+        keepalive : function(host) {
+            if (!Connection.get_one(host)){
+                Connection.set(host);
+            } else {
+                Connection.update(host);
+            }
         }
     });
-    
+
     Msgs.deny(
         insert = function() {
             return true;
@@ -93,7 +100,7 @@ if (Meteor.isServer) {
             return true;
         }
     );
-    
+
     Rooms.deny(
         insert = function() {
             return true;
@@ -105,4 +112,30 @@ if (Meteor.isServer) {
             return true;
         }
     );
+
+    Meteor.setInterval(function(){
+        var now = +(new Date())/1000;
+        Connections.find({last_seen: {$lt: now - 60}}).forEach(function(conn){
+            var user_id = conn['user_id']
+                presence = Presence.get_by_user_id(user_id),
+                room = presence['room'],
+                host = presence['host'],
+                user = Meteor.users.findOne(user_id);
+            console.log(presence)
+            Msgs.insert({
+                user_name : user['profile']['name'],
+                user_id : user_id,
+                action : '',
+                msg : ' left room...',
+                room : room,
+                host: host
+            });
+            Presences.remove({
+                user_id : user_id,
+                room : room,
+                host : host
+            });
+            Connections.remove(conn['_id']);
+        });
+    }, 60*100);
 }
