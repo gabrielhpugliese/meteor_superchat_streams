@@ -51,6 +51,8 @@ if (Meteor.isClient) {
     var PARENT = get_parent_param();
     Meteor.startup(function(){
         Session.set('presence', false);
+        Session.set('joined', false);
+        Session.set('room', '');
     });
 
     Meteor.subscribe('Rooms', PARENT);
