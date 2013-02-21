@@ -57,7 +57,7 @@ if (Meteor.isClient) {
 
     Meteor.subscribe('Rooms', PARENT);
     Meteor.subscribe('Users');
-    Meteor.subscribe('Presences', Meteor.userId(), PARENT, function(){
+    Meteor.subscribe('Presences', PARENT, function(){
         Session.set('presence', true);
     });
 
