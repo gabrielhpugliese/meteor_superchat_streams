@@ -65,8 +65,8 @@ if (Meteor.isServer) {
         return Msgs.find({room: room, host: host});
     });
 
-    Meteor.publish('Presences', function(user_id, host){
-        return Presences.find({user_id: user_id, host: host});
+    Meteor.publish('Presences', function(host){
+        return Presences.find({user_id: this.userId(), host: host});
     });
 
     Meteor.methods({
