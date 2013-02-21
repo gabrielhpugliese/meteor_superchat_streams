@@ -26,6 +26,9 @@ save_profile = function(user){
 }
 
 msg_set = function(action, msg, room, host) {
+    if (!Meteor.user())
+        return;
+
     var user_name = Meteor.user()['profile']['name'];
     if (!user_name || !msg)
         return;
@@ -117,11 +120,13 @@ if (Meteor.isServer) {
         var now = +(new Date())/1000;
         Connections.find({last_seen: {$lt: now - 60}}).forEach(function(conn){
             var user_id = conn['user_id']
-                presence = Presence.get_by_user_id(user_id),
-                room = presence['room'],
+                presence = Presence.get_by_user_id(user_id);
+            if (!presence)
+                return;
+
+            var room = presence['room'],
                 host = presence['host'],
                 user = Meteor.users.findOne(user_id);
-            console.log(presence)
             Msgs.insert({
                 user_name : user['profile']['name'],
                 user_id : user_id,

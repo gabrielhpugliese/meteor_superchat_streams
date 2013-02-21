@@ -38,13 +38,13 @@ send_msg = function(e) {
     }
 };
 
-join_room = function(room){
+join_room = function(room, host){
     if (!Session.get('joined')){
         Session.set('joined', true);
         Session.set('room', room);
-        Meteor.call('joined', room, PARENT, function(){});
+        Meteor.call('joined', room, host, function(){});
     }
-    Meteor.subscribe('Msgs', room, PARENT);
+    Meteor.subscribe('Msgs', room, host);
 }
 
 if (Meteor.isClient) {
@@ -69,7 +69,7 @@ if (Meteor.isClient) {
         Meteor.autorun(function(){
             var presence = Presences.findOne();
             if (presence) {
-                join_room(presence['room']);
+                join_room(presence['room'], PARENT);
             }
         });
     }
@@ -145,13 +145,13 @@ if (Meteor.isClient) {
                 name = Meteor.user()['profile']['name'];
             else return;
 
-            join_room(room);
+            join_room(room, PARENT);
         },
         'click button.msg-send' : send_msg,
         'keydown #msg': send_msg,
         'click button.room-exit' : function() {
             var room = Session.get('room');
-            Meteor.call('left', room, PARENT, function(){
+            Meteor.call('left', room, PARENT, function(error, result){
                 Session.set('joined', false);
                 Session.set('room', '');
             });

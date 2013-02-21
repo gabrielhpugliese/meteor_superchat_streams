@@ -1,6 +1,6 @@
 Msgs = new Meteor.Collection('msgs');
 Rooms = new Meteor.Collection('rooms');
-Presences = new Meteor.Collection('people');
+Presences = new Meteor.Collection('presences');
 Connections = new Meteor.Collection('connections');
 
 Msg = {
@@ -62,6 +62,8 @@ Presence = {
 
 Connection = {
     set : function(host) {
+        if (!Meteor.user())
+            return;
         return Connections.insert({
             user_id : Meteor.userId(),
             host : host,
@@ -81,6 +83,8 @@ Connection = {
         });
     },
     update : function(host) {
+        if (!Meteor.user())
+            return;
         return Connections.update({
             user_id : Meteor.userId(),
             host : host
