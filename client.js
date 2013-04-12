@@ -63,7 +63,7 @@ if (Meteor.isClient) {
 
     Meteor.setInterval(function(){
         Meteor.call('keepalive', PARENT);
-    }, 30*100);
+    }, 10*100);
 
     Template.entrance.created = function() {
         Meteor.autorun(function(){

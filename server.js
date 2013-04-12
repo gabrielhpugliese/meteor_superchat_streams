@@ -66,7 +66,7 @@ if (Meteor.isServer) {
     });
 
     Meteor.publish('Presences', function(host){
-        return Presences.find({user_id: this.userId(), host: host});
+        return Presences.find({user_id: this.userId, host: host});
     });
 
     Meteor.methods({
@@ -118,7 +118,7 @@ if (Meteor.isServer) {
 
     Meteor.setInterval(function(){
         var now = +(new Date())/1000;
-        Connections.find({last_seen: {$lt: now - 60}}).forEach(function(conn){
+        Connections.find({last_seen: {$lt: now - 30}}).forEach(function(conn){
             var user_id = conn['user_id']
                 presence = Presence.get_by_user_id(user_id);
             if (!presence)
@@ -142,5 +142,5 @@ if (Meteor.isServer) {
             });
             Connections.remove(conn['_id']);
         });
-    }, 60*100);
+    }, 30*100);
 }
