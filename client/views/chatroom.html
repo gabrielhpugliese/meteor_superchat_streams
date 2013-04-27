@@ -1,0 +1,30 @@
+<template name="chatroom">
+    
+    <h3>Chat</h3>
+    <div id="chat">
+        {{#each msgs}}
+        <p>
+            {{#with getProfile owner}}
+            <a href="{{url}}" target="_blank"><img src="{{pic_square}}" />{{name}}</a>
+            {{/with}}
+            {{action}}: {{msg}}
+        </p>
+	    {{scrollToBottom}}
+        {{/each}}
+    </div>
+    <div id="msg-wrap">
+        {{loginButtons}}
+    	{{#constant}}
+        <div>
+	        <textarea cols="30" rows="4" type="text" id="msg" ></textarea>
+	        <button class="msg-send">
+	            Send
+	        </button>
+	        <button class="room-exit">
+	            Exit
+	        </button>
+        </div>
+        {{/constant}}
+    </div>
+    
+</template>
