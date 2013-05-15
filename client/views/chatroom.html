@@ -5,7 +5,7 @@
         {{#each msgs}}
         <p>
             {{#with getProfile owner}}
-            <a href="{{url}}" target="_blank"><img src="{{pic_square}}" />{{name}}</a>
+            <a href="{{url}}" target="_blank"><img class="img-circle" src="{{pic_square}}" />{{name}}</a>
             {{/with}}
             {{action}}: {{msg}}
         </p>
