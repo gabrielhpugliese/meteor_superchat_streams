@@ -5,15 +5,20 @@ Template.chatroom.rendered = function () {
     $('#msg').keydown(function (event) {
         if ((event.keyCode || event.which || event.charCode || 0) != 13)
             return;
-            
+
         sendMsg();
+    });
+    $('#chat').niceScroll({
+        autohidemode: false,
+        cursoropacitymin: 0.3,
+        cursoropacitymax: 0.3
     });
 }
 
 Template.chatroom.msgs = function() {
     if (!Meteor.router)
         return;
-    
+
     return Msgs.find({host : Meteor.router.invocation().host});
 };
 
@@ -41,7 +46,7 @@ Template.chatroom.events({
 
 sendMsg = function () {
     var $msg = $('#msg');
-    
+
     Msgs.insert({
         action: 'says',
         msg: $msg.val(),
