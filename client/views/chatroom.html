@@ -7,10 +7,10 @@
             {{#with getProfile owner}}
             <a href="{{url}}" target="_blank"><img class="img-circle" src="{{pic_square}}" />{{name}}</a>
             {{/with}}
-            {{action}}: {{msg}}
-        </p>
-	    {{scrollToBottom}}
+            {{action}}: 
+        {{#markdown}}{{{msg}}}{{/markdown}}
         {{/each}}
+        </p>
     </div>
     <div id="msg-wrap">
         {{loginButtons}}

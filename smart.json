@@ -1,6 +1,7 @@
 {
   "packages": {
     "mini-pages": {},
-    "presence": {}
+    "presence": {},
+    "marked": {}
   }
 }
