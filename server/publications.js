@@ -21,8 +21,6 @@ Meteor.presences.find().observe({
 
 Msgs.allow({
     insert : function (userId, doc) {
-    	console.log(userId);
-    	console.log(doc);
         return userId && doc.owner === userId && doc.msg && doc.host && doc.action;
     }
 });
