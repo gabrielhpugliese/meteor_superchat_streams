@@ -28,11 +28,8 @@ Template.chatroom.rendered = function () {
 }
 
 Template.chatroom.msgs = function() {
-    if (!Meteor.router)
-        return;
-
-	$('#scroll-to-bottom').show();
-    return Msgs.find({host : Meteor.router.invocation().host});
+    $('#scroll-to-bottom').show();
+    return Msgs.find({host : location.pathname});
 };
 
 Template.chatroom.getProfile = function(user_id) {
@@ -53,7 +50,7 @@ sendMsg = function () {
         action: 'says',
         msg: $msg.val(),
         owner: Meteor.userId(),
-        host: Meteor.router.invocation().host
+        host: location.pathname
     });
     $msg.val('');
 }

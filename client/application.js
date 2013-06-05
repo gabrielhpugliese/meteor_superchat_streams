@@ -1,15 +1,6 @@
 
 Meteor.subscribe('usersSuperChat');
-Session.set('msgsLoading', true);
-Meteor.autosubscribe(function () {
-    var interval = Meteor.setInterval(function () {
-        if (!Meteor.router)
-            return;
-        Meteor.subscribe('msgsSuperChat', Meteor.router.invocation().host);
-        Meteor.clearInterval(interval);
-        Session.set('msgsLoading', false);
-    }, 100);
-});
+Meteor.subscribe('msgsSuperChat', location.pathname);
 
 // Marked options
 
