@@ -1,6 +1,14 @@
 
 Meteor.subscribe('usersSuperChat');
-Meteor.subscribe('msgsSuperChat', location.pathname);
+Deps.autorun(function () {
+	Meteor.setInterval(function () {
+		var host = null;
+		if (Meteor.router)
+			host = Meteor.router.path();
+			
+		Meteor.subscribe('msgsSuperChat', host);
+	}, 100);
+});
 
 // Marked options
 

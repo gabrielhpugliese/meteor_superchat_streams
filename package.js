@@ -5,27 +5,31 @@ Package.describe({
 Package.on_use(function (api, where) {
   // Client
   api.use([
+  	'deps',
     'startup',
     'session',
     'templating',
-    'less'
+    'less',
+    'jquery',
+    'bootstrap',
+    'mini-pages',
+    'marked'
   ], 'client');
-  api.use(['marked'], 'client');
 
   api.add_files([
 		 'client/stylesheets/highlight/default.css',
 		 'client/stylesheets/superchat.less',
 		 'client/views/chatroom.html',
 		 'client/views/chatroom.js',
-		 'client/views/layout.html',
 		 'client/application.js'
 		 ], 'client');
   api.add_files(['client/compatibility/highlight.pack.js',
-                 'client/compatibility/jquery.nicescroll.min.js',
+  				 'client/compatibility/jquery.nicescroll.min.js',
                  'client/compatibility/keyboard.js'
                  ], 'client', {raw: true});
 
   // Both
+  api.use(['accounts-base'], ['client', 'server']);
   api.add_files(['collections/models.js'], ['client', 'server']);
 
   // Server

@@ -3,7 +3,10 @@ Meteor.publish('usersSuperChat', function(){
 });
 
 Meteor.publish('msgsSuperChat', function (host) {
-    return Msgs.find({host: host});
+	if (host)
+    	return Msgs.find({host: host});
+    else
+    	this.stop();
 });
 
 Meteor.users.find().observe({
