@@ -21,12 +21,26 @@ To update an existing project:
 
 ## Quick Start
 
+You need to configure at least one kind of account. Supported languages now are:
+* Facebook
+* Google
+* Twitter
+
+For example, with Google:
+
+```bash
+meteor add accounts-google
+```
+
 ```html
 <template name="index">
   {{> chatroom}}
 </template>
 ```
 
+## Configuration
+
+If you don't want to have a global chat for entire website, you can set a Path so you can have a different chat box for each Path you set.
 What's needed to do on javascript part is set a Path. Path is a reactive source of current page path (like window.location.pathname).
 So, whenever it changes, it must be updated calling ```Path.set(path)```
 
