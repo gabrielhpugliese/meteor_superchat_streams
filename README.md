@@ -21,7 +21,6 @@ To update an existing project:
 <body>
   {{> chatroom}}
 </body>
-
 ```
 
 ### With mini-pages
