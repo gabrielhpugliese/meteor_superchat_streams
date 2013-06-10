@@ -18,27 +18,32 @@ To update an existing project:
 ## Quick Start
 
 ```html
-<body>
+<template name="index">
   {{> chatroom}}
-</body>
+</template>
 ```
 
-### With mini-pages
-```javascript
-Meteor.setInterval(function () {
-    if (!Meteor.router)
-        return;
+What's needed to do on javascript part is set a Path. Path is a reactive source of current page path (like window.location.pathname).
+So, whenever it changes, it must be updated calling ```Path.set(path)```
 
-    Path.set(Meteor.router.path());
-}, 100);
+### Example with mini-pages
+```javascript
+Meteor.pages({
+  '/': {to: 'index', before: setPath}
+});
+
+function setPath () {
+  Path.set(Meteor.router.path());
+}
 ```
 
-### With router
+### Example with router
 ```javascript
-Meteor.setInterval(function () {
-    if (!Meteor.Router)
-        return;
+Meteor.Router.add({
+  '/': { to: 'index', and: setPath}
+});
 
-    Path.set(Meteor.Router.page());
-}, 100);
+function setPath () {
+  Path.set(Meteor.Router.page());
+}
 ```
