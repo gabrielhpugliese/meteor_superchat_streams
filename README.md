@@ -3,6 +3,10 @@ Meteor SuperChat
 
 Smart package for SuperChat. Superchat is a chat that includes Social Login and Github Flavored Markdown.
 
+## Demo
+
+http://superchat.meteor.com
+
 ## Install
 
 To install in a new project:
