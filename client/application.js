@@ -1,5 +1,5 @@
 DepsPath = function (host) {
-    this.path = '';
+    this.path = '/';
     this.deps = new Deps.Dependency;
 
     var get = function () {
