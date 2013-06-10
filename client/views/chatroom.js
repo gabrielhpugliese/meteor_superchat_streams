@@ -28,10 +28,7 @@ Template.chatroom.rendered = function () {
 }
 
 Template.chatroom.msgs = function() {
-	if (!Meteor.router)
-		return;
-
-    return Msgs.find({host : Meteor.router.path()});
+    return superChatMsgs.find();
 };
 
 Template.chatroom.getProfile = function(user_id) {
@@ -48,11 +45,11 @@ Template.chatroom.events({
 
 sendMsg = function () {
     var $msg = $('#msg');
-    Msgs.insert({
+    superChatMsgs.insert({
         action: 'says',
         msg: $msg.val(),
         owner: Meteor.userId(),
-        host: Meteor.router.path()
+        host: Path()
     });
     $msg.val('');
 }

@@ -1,13 +1,26 @@
+DepsPath = function (host) {
+    this.path = '';
+    this.deps = new Deps.Dependency;
 
-Meteor.subscribe('usersSuperChat');
-Deps.autorun(function () {
-	Meteor.setInterval(function () {
-		var host = null;
-		if (Meteor.router)
-			host = Meteor.router.path();
-			
-		Meteor.subscribe('msgsSuperChat', host);
-	}, 100);
+    var get = function () {
+        Deps.depend(this.deps);
+        return this.path;
+    }.bind(this);
+
+    var set = function (value) {
+        this.path = value;
+        this.deps.changed();
+    }.bind(this);
+
+    innerChain = {set: set};
+    innerChain.__proto__ = get.__proto__;
+    get.__proto__ = innerChain;
+    return get;
+};
+Path = DepsPath();
+
+Meteor.autosubscribe(function () {
+    Meteor.subscribe('superChatMsgs', Path());
 });
 
 // Marked options

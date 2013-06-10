@@ -2,9 +2,9 @@ Meteor.publish('usersSuperChat', function(){
     return Meteor.users.find({}, {fields: {profile: true}});
 });
 
-Meteor.publish('msgsSuperChat', function (host) {
+Meteor.publish('superChatMsgs', function (host) {
 	if (host)
-    	return Msgs.find({host: host});
+    	return superChatMsgs.find({host: host});
     else
     	this.stop();
 });
@@ -18,11 +18,7 @@ Meteor.users.find().observe({
     }
 });
 
-Meteor.presences.find().observe({
-    //TODO: Enter/leave messages
-});
-
-Msgs.allow({
+superChatMsgs.allow({
     insert : function (userId, doc) {
         return userId && doc.owner === userId && doc.msg && doc.host && doc.action;
     }

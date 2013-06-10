@@ -6,6 +6,7 @@
   "version": "0.1",
   "git": "git@github.com:gabrielhpugliese/meteor_superchat.git",
   "packages": {
-    "marked": {}
+    "marked": {},
+    "mini-pages": {}
   }
 }

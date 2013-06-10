@@ -12,8 +12,8 @@ Package.on_use(function (api, where) {
     'less',
     'jquery',
     'bootstrap',
-    'mini-pages',
-    'marked'
+    'marked',
+    'accounts-ui'
   ], 'client');
 
   api.add_files([

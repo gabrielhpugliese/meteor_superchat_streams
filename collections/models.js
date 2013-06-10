@@ -1,1 +1,1 @@
-Msgs = new Meteor.Collection('msgs');
+superChatMsgs = new Meteor.Collection('msgs');
