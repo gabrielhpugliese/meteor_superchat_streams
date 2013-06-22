@@ -65,3 +65,14 @@ function setPath () {
   Path.set(Meteor.Router.page());
 }
 ```
+
+### Making height responsive
+```
+Template.parentTemplate.rendered = function() {
+	$(window).resize(function () {
+		var height = $(this).height(); // you can set a value you want here
+		$('#chat-wrapper').height(height);
+	});
+	$(window).resize(); // trigger the resize
+}
+```
