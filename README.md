@@ -21,7 +21,7 @@ To update an existing project:
 
 ## Quick Start
 
-You need to configure at least one kind of account. Supported languages now are:
+You need to configure at least one kind of account. Supported social plataforms now are:
 * Facebook
 * Google
 * Twitter
