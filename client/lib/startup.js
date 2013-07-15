@@ -1,5 +1,5 @@
 Meteor.startup(function () {
-   Path = DepsPath();
+    Path = DepsPath();
 
     Meteor.autosubscribe(function () {
         Meteor.subscribe('superChatMsgs', Path());
