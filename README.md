@@ -21,7 +21,7 @@ To update an existing project:
 
 ## Quick Start
 
-You need to configure at least one kind of account. Supported languages now are:
+You need to configure at least one kind of account. Supported social plataforms now are:
 * Facebook
 * Google
 * Twitter
@@ -63,5 +63,16 @@ Meteor.Router.add({
 
 function setPath () {
   Path.set(Meteor.Router.page());
+}
+```
+
+### Making height responsive
+```
+Template.parentTemplate.rendered = function() {
+	$(window).resize(function () {
+		var height = $(this).height(); // you can set a value you want here
+		$('#chat-wrapper').height(height);
+	});
+	$(window).resize(); // trigger the resize
 }
 ```

@@ -1,27 +1,32 @@
 <template name="chatroom">
-
-    <h3>Chat</h3>
-    <div id="chat">
-        {{#each msgs}}
-        <p>
-            {{#with getProfile owner}}
-            <a href="{{url}}" target="_blank"><img class="img-circle" src="{{pic_square}}" />{{name}}</a>
-            {{/with}}
-            {{action}}: 
-        {{#markdown}}{{{msg}}}{{/markdown}}
-        {{/each}}
-        </p>
-    </div>
-    <div id="msg-wrap">
-        {{loginButtons}}
-    	{{#constant}}
-        <div>
-	        <textarea cols="30" rows="4" type="text" id="msg" ></textarea>
-	        <button class="msg-send">
-	            Send
-	        </button>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12" id="chat-wrapper">
+                <h3>Chat</h3>
+                <div id="chat">
+                    {{#each msgs}}
+                    <p>
+                        {{#with getProfile owner}}
+                        <a href="{{url}}" target="_blank"><img class="img-circle" src="{{pic_square}}" />{{name}}</a>
+                        {{/with}}
+                        {{action}}:
+                        {{#markdown}}{{{msg}}}{{/markdown}}
+                        {{/each}}
+                    </p>
+                </div>
+                <div id="msg-wrap">
+                    {{loginButtons}}
+                    <a href="https://help.github.com/articles/github-flavored-markdown" target="_blank" class="pull-right">Github Flavored Markdown</a>
+                    {{#constant}}
+                    <div>
+                        <textarea class="field span9" rows="4" type="text" id="msg" ></textarea>
+                        <button class="msg-send btn btn-primary span3">
+                            Send
+                        </button>
+                    </div>
+                    {{/constant}}
+                </div>
+            </div>
         </div>
-        {{/constant}}
     </div>
-
 </template>

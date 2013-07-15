@@ -19,11 +19,15 @@ Template.chatroom.rendered = function () {
     	KeyboardJS.clear('enter');
     	KeyboardJS.clear('shift + enter');
     });
-    $('#chat').niceScroll({
-        autohidemode: false,
-        cursoropacitymin: 0.3,
-        cursoropacitymax: 0.3
-    });
+    try {
+        $('#chat').niceScroll({
+            autohidemode: false,
+            cursoropacitymin: 0.3,
+            cursoropacitymax: 0.3
+        });
+    } catch (err) {
+        console.error('Could not apply jQuery.niceScroll to the chatroom', err);
+    }
     scrollToBottom();
 }
 
