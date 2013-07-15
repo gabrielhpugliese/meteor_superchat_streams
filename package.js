@@ -17,11 +17,12 @@ Package.on_use(function (api, where) {
   ], 'client');
 
   api.add_files([
+    'client/lib/deps_path.js',
+    'client/lib/startup.js',
     'client/stylesheets/highlight/default.css',
     'client/stylesheets/superchat.less',
     'client/views/chatroom.html',
-    'client/views/chatroom.js',
-    'client/application.js'
+    'client/views/chatroom.js'
   ], 'client');
   api.add_files([
     'client/compatibility/highlight.pack.js',
