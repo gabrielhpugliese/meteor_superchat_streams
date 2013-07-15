@@ -3,6 +3,8 @@ DepsPath = function (host) {
     this.deps = new Deps.Dependency;
 
     var get = function () {
+        if (typeof Deps === 'undefined')
+            return;
         Deps.depend(this.deps);
         return this.path;
     }.bind(this);
@@ -17,19 +19,3 @@ DepsPath = function (host) {
     get.__proto__ = innerChain;
     return get;
 };
-Path = DepsPath();
-
-Meteor.autosubscribe(function () {
-    Meteor.subscribe('superChatMsgs', Path());
-});
-
-// Marked options
-
-marked.setOptions({
-	langPrefix: '',
-	breaks: true,
-	sanitize: true,
-	highlight: function(code) {
-	    return hljs.highlightAuto(code).value;
-	}
-});
