@@ -4,6 +4,7 @@
             <div class="span12" id="chat-wrapper">
                 <h3>Chat</h3>
                 <div id="chat">
+                    {{#isolate}}
                     {{#each msgs}}
                     <p>
                         {{#with getProfile owner}}
@@ -11,8 +12,9 @@
                         {{/with}}
                         {{action}}:
                         {{#markdown}}{{{msg}}}{{/markdown}}
-                        {{/each}}
                     </p>
+                    {{/each}}
+                    {{/isolate}}
                 </div>
                 <div id="msg-wrap">
                     {{loginButtons}}

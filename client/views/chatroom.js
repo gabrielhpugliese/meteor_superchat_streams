@@ -11,14 +11,17 @@ Template.chatroom.rendered = function () {
        	});
 
 		KeyboardJS.on('enter', function () {
-	        sendMsg();
+		    if ($('#msg').attr('disabled') !== 'disabled')
+	           sendMsg();
 	        return false;
 		});
     });
+    
     $('#msg').blur(function () {
     	KeyboardJS.clear('enter');
     	KeyboardJS.clear('shift + enter');
     });
+    
     try {
         $('#chat').niceScroll({
             autohidemode: false,
@@ -28,6 +31,7 @@ Template.chatroom.rendered = function () {
     } catch (err) {
         console.error('Could not apply jQuery.niceScroll to the chatroom', err);
     }
+    
     scrollToBottom();
 }
 
@@ -49,8 +53,8 @@ Template.chatroom.events({
 
 sendMsg = function () {
     var $msg = $('#msg');
+    
     superChatMsgs.insert({
-        action: 'says',
         msg: $msg.val(),
         owner: Meteor.userId(),
         host: Path()
@@ -66,3 +70,16 @@ scrollToBottom = function () {
 	    } catch(err) {}
     });
 }
+
+Deps.autorun(function () {
+    var user = Meteor.user();
+    if (user && typeof user.profile.canChat !== 'undefined' && !user.profile.canChat) {
+        $('#msg').attr('disabled', 'disabled');
+        $('#msg').val('You are banned for 60s for flooding.');
+        $('.msg-send').attr('disabled', 'disabled');
+    } else {
+        $('#msg').removeAttr('disabled');
+        $('#msg').val('');
+        $('.msg-send').removeAttr('disabled');
+    }
+});

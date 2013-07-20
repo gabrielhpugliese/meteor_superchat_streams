@@ -31,12 +31,13 @@ Package.on_use(function (api, where) {
   ], 'client', {raw: true});
 
   // Both
-  api.use(['accounts-base'], ['client', 'server']);
+  api.use(['accounts-base', 'presence', 'collection-hooks'], ['client', 'server']);
   api.add_files(['collections/models.js'], ['client', 'server']);
 
   // Server
   api.add_files(['server/lib/utils.js',
-	             'server/publications.js'
+	             'server/publications.js',
+	             'server/unban.js'
 		         ], 'server');
 
 });
