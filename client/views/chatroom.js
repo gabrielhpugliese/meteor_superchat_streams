@@ -33,6 +33,8 @@ Template.chatroom.rendered = function () {
     }
     
     scrollToBottom();
+    
+    
 }
 
 Template.chatroom.msgs = function() {
@@ -48,6 +50,15 @@ Template.chatroom.getProfile = function(user_id) {
 Template.chatroom.events({
     'click .msg-send' : function () {
         sendMsg();
+    },
+    'keyup #msg' : function (event) {
+        var target = event.target,
+            len = target.value.length;
+        if (len > 500) {
+            target.value = target.value.substring(0, 500);
+        } else {
+            $('#msg-counter').text(500 - len);
+        }
     }
 });
 

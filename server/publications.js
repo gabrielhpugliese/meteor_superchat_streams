@@ -32,7 +32,7 @@ Meteor.publish('superChatUserPresence', function() {
 
 superChatMsgs.allow({
     insert : function (userId, doc) {
-        if (!(doc.host && userId && doc.owner === userId && doc.msg))
+        if (!(doc.host && userId && doc.owner === userId && doc.msg && doc.msg.length < 500))
             return false;
             
         var user = Meteor.users.findOne({_id: userId});

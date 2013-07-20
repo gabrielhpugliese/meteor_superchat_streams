@@ -21,7 +21,10 @@
                     <a href="https://help.github.com/articles/github-flavored-markdown" target="_blank" class="pull-right">Github Flavored Markdown</a>
                     {{#constant}}
                     <div>
-                        <textarea class="field span9" rows="4" type="text" id="msg" ></textarea>
+                        <div class="span9">
+                            <textarea data-toggle="tooltip" title="first tooltip" class="field span11" rows="4" type="text" id="msg"></textarea>
+                            <div id="msg-counter" class="span1"> 500</div>
+                        </div>
                         <button class="msg-send btn btn-primary span3">
                             Send
                         </button>
