@@ -1,0 +1,11 @@
+/* CSS declarations go here */
+
+#chat-wrapper {
+  height: 200px;
+  font-family: 'Lato',sans-serif;
+}
+
+#outer {
+  width: 400px;
+  margin: 0 auto;
+}
