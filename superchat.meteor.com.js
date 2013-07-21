@@ -21,7 +21,8 @@ WebFontConfig = {
 })();
 
   Meteor.pages({
-    '/': {to: 'index', before: setPath}
+    '/': {to: 'index', before: setPath},
+    '/:otherpath': {to: 'index', before: setPath}
   });
 
   function setPath () {
