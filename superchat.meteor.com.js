@@ -20,4 +20,11 @@ WebFontConfig = {
     s.parentNode.insertBefore(wf, s);
 })();
 
+  Meteor.pages({
+    '/': {to: 'index', before: setPath}
+  });
+
+  function setPath () {
+    Path.set(Meteor.router.path());
+  }
 }
