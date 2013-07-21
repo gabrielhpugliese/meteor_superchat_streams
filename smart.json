@@ -3,9 +3,11 @@
   "description": "Chat with Github Flavored Markdown and social login",
   "homepage": "https://github.com/gabrielhpugliese/meteor_superchat",
   "author": "Gabriel Henrique Pugliese <gabrielhpugliese@gmail.com>",
-  "version": "0.1.4",
+  "version": "0.1.4b",
   "git": "https://github.com/gabrielhpugliese/meteor_superchat",
   "packages": {
-    "marked": {}
+    "marked": {},
+    "presence": {},
+    "collection-hooks": {}
   }
 }
