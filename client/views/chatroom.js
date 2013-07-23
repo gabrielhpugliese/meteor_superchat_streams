@@ -42,7 +42,7 @@ Template.chatroom.msgs = function() {
 
 Template.chatroom.getProfile = function(user_id) {
     try {
-        return Meteor.users.findOne(user_id).profile;
+        return Meteor.users.findOne(user_id).superchat;
     } catch (err) {}
 };
 

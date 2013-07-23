@@ -1,9 +1,5 @@
-saveProfile = function(user){
-    var user = Meteor.users.findOne(user['_id']),
-        pic_square,
-        id;
-
-    if (user['profile']['pic_square'])
+saveUserProfile = function(user){
+    if (user.superchat.pic_square)
         return;
 
     if ('facebook' in user['services']){
@@ -19,8 +15,9 @@ saveProfile = function(user){
         pic_square = 'https://api.twitter.com/1/users/profile_image/'+id;
         url = 'https://twitter.com/'+id;
     }
-    user['profile']['pic_square'] = pic_square;
-    user['profile']['url'] = url;
+    user.superchat['pic_square'] = pic_square;
+    user.superchat['url'] = url;
+    user.superchat.name = user.profile.name;
 
-    return Meteor.users.update(user['_id'], {$set: {profile: user['profile']}});
+    return user;
 }

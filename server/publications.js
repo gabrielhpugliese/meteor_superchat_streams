@@ -1,15 +1,15 @@
-Meteor.users.find().observe({
-    changed : function(user) {
-        saveProfile(user);
-    },
-    added : function(user) {
-        saveProfile(user);
-    }
-});
+//Meteor.users.find().observe({
+//    changed : function(user) {
+//        saveProfile(user);
+//    },
+//    added : function(user) {
+//        saveProfile(user);
+//    }
+//});
 
 // SuperChat stuff
 Meteor.publish('usersSuperChat', function(){
-    return Meteor.users.find({}, {fields: {profile: true}});
+    return Meteor.users.find({}, {fields: {superchat: true}});
 });
 
 Meteor.publish('superChatMsgs', function (host) {
@@ -36,7 +36,7 @@ superChatMsgs.allow({
             return false;
             
         var user = Meteor.users.findOne({_id: userId});
-        if (typeof user.profile.canChat !== 'undefined' && !user.profile.canChat)
+        if (typeof user.superchat.canChat !== 'undefined' && !user.superchat.canChat)
             return false;
         
         // check if is flooding and ban user
@@ -48,8 +48,8 @@ superChatMsgs.allow({
         if (lastMsgs.length === 3 && now - lastMsgs[2].createdAt <= 1000) {
             Meteor.users.update({_id: userId}, {
                 $set: {
-                    'profile.canChat': false,
-                    'profile.whenCanChat': now + (60 * 1000)
+                    'superchat.canChat': false,
+                    'superchat.whenCanChat': now + (60 * 1000)
                 }
             });
         }
@@ -60,4 +60,10 @@ superChatMsgs.allow({
 superChatMsgs.before('insert', function (userId, doc) {
     doc.action = 'says';
     doc.createdAt = +(new Date());
+});
+
+Meteor.users.before('insert', function (userId, doc) {
+    if (!doc.superchat)
+        doc.superchat = {};
+    doc = saveUserProfile(doc);
 });
