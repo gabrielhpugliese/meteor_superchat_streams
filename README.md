@@ -24,7 +24,8 @@ To update an existing project:
 You need to configure at least one kind of account. Supported social plataforms now are:
 * Facebook
 * Google
-* Twitter
+* ~~Twitter~~ (Twitter API v1.1 requires OAuth authenticated requests to
+  get profile picture)
 
 For example, with Google:
 
