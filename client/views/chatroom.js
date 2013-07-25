@@ -22,7 +22,7 @@ Template.chatroom.rendered = function () {
     });
     
     try {
-        $('#chat').niceScroll({
+        $('#chat,#users-list').niceScroll({
             autohidemode: false,
             cursoropacitymin: 0.3,
             cursoropacitymax: 0.3
@@ -44,6 +44,21 @@ Template.chatroom.getProfile = function(user_id) {
     try {
         return Meteor.users.findOne(user_id).superchat;
     } catch (err) {}
+};
+
+Template.chatroom.onlineUsers = function () {
+    var presences = Meteor.presences.find({userId: {$exists: true}}).fetch(),
+        ids = _.pluck(presences, 'userId'),
+        query = [];
+
+    if (_.isEmpty(ids))
+        return;
+    
+    for (var i in ids) {
+        query.push({_id: ids[i]});
+    }
+
+    return Meteor.users.find({$or: query});
 };
 
 Template.chatroom.events({
@@ -73,7 +88,10 @@ Template.chatroom.events({
         if (Meteor.user())
             return;
 
-        $('#login-buttons').popover('hide');
+        $(event.target).popover('hide');
+    },
+    'click #toggle-users-list' : function () {
+        $('#users-list').toggle();
     }
 });
 

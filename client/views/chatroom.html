@@ -18,7 +18,8 @@
                 </div>
                 <div id="msg-wrap">
                     {{loginButtons}}
-                    <a href="https://help.github.com/articles/github-flavored-markdown" target="_blank" class="pull-right">Github Flavored Markdown</a>
+                    <a href="https://help.github.com/articles/github-flavored-markdown" target="_blank" class="btn pull-right" title="Github Flavored Markdown"><i class="icon-info-sign"></i></a>
+                    <button id="toggle-users-list" class="btn pull-right" title="Users online"><i class="icon-user"></i></button>
                     {{#constant}}
                     <div>
                         <div class="span9">
@@ -30,6 +31,16 @@
                         </button>
                     </div>
                     {{/constant}}
+                </div>
+                <div id="users-list" class="span6" style="display: none;">
+                    <h5>Users online</h5>
+                    <ul>
+                        {{#isolate}}
+                        {{#each onlineUsers}}
+                        <li><a href="{{superchat.url}}" target="_blank"><img class="img-circle" src="{{superchat.pic_square}}" />{{superchat.name}}</a></li>
+                        {{/each}}
+                        {{/isolate}}
+                    </ul>
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ Meteor.startup(function () {
         Meteor.subscribe('superChatMsgs', Path());
     });
     Meteor.subscribe('usersSuperChat');
+    Meteor.subscribe('superChatUserPresence');
 
     // Marked options
 
