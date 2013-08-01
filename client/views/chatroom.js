@@ -75,8 +75,10 @@ Template.chatroom.events({
         }
     },
     'focus #msg' : function (event) {
-        if (Meteor.user())
+        if (Meteor.user()) {
+            $('#login-buttons').popover('hide');
             return;
+        }
         $('#login-buttons').popover({
             animation: true,
             content: function () {
@@ -84,11 +86,8 @@ Template.chatroom.events({
             }
         }).popover('show');
     },
-    'click #login-buttons' : function (event) {
-        if (Meteor.user())
-            return;
-
-        $(event.target).popover('hide');
+    'focusout #msg' : function (event) {
+        $('#login-buttons').popover('hide');
     },
     'click #toggle-users-list' : function () {
         $('#users-list').toggle();
