@@ -3,12 +3,18 @@ Meteor SuperChat with Meteor Streams
 
 Smart package for SuperChat Streams. It is a chat that includes Social Login and Github Flavored Markdown and do not use MongoDB for persistence, but uses Meteor Streams for direct messaging between clients.
 
+Works with Meteor release 0.6.4.1 and beyond only.
+
 If you want persistence see
 [SuperChat](https://github.com/gabrielhpugliese/meteor_superchat) instead.
 
 ## Demo
 
 http://superchat-streams.meteor.com
+
+### Mantained by CodersTV
+
+This package is used and mantained by [CodersTV](http://coderstv.com)
 
 ## Install
 
