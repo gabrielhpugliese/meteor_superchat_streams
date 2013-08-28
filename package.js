@@ -1,5 +1,5 @@
 Package.describe({
-  summary: "Chat with Github Flavored Markdown and social login"
+  summary: "Chat with Github Flavored Markdown and social login using Meteor Streams"
 });
 
 Package.on_use(function (api, where) {
