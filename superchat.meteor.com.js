@@ -1,9 +1,9 @@
 if (Meteor.isClient) {
   new ForkMe({
     user: 'gabrielhpugliese',
-    repo: 'meteor_superchat',
+    repo: 'meteor_superchat_streams',
     ribbon: {
-      color: 'red',
+      color: 'green',
       position: 'left'
     },
   });
