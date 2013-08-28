@@ -1,22 +1,25 @@
-Meteor SuperChat
+Meteor SuperChat with Meteor Streams
 ================
 
-Smart package for SuperChat. Superchat is a chat that includes Social Login and Github Flavored Markdown.
+Smart package for SuperChat Streams. It is a chat that includes Social Login and Github Flavored Markdown and do not use MongoDB for persistence, but uses Meteor Streams for direct messaging between clients.
+
+If you want persistence see
+[SuperChat](https://github.com/gabrielhpugliese/meteor_superchat) instead.
 
 ## Demo
 
-http://superchat.meteor.com
+http://superchat-streams.meteor.com
 
 ## Install
 
 To install in a new project:
 ```bash
-> mrt add superchat
+> mrt add superchat-streams
 ```
 
 To update an existing project:
 ```bash
-> mrt update superchat
+> mrt update superchat-streams
 ```
 
 ## Quick Start
@@ -77,3 +80,8 @@ Template.parentTemplate.rendered = function() {
 	$(window).resize(); // trigger the resize
 }
 ```
+
+### Dependencies
+
+Thanks @arunoda for his great Meteor project called [Meteor
+Streams](https://github.com/arunoda/meteor-streams). 

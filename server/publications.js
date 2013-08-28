@@ -21,7 +21,7 @@ superChatStream.permissions.read(function (eventName) {
 });
 
 superChatStream.permissions.write(function (eventName) {
-    return true;
+    return !! this.userId;
 });
 
 superChatStream.addFilter(function (eventName, args) {
