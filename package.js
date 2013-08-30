@@ -16,6 +16,10 @@ Package.on_use(function (api, where) {
     'accounts-ui'
   ], 'client');
 
+  // Both
+  api.use(['accounts-base', 'presence', 'collection-hooks', 'streams'], ['client', 'server']);
+  api.add_files(['collections/models.js'], ['client', 'server']);
+
   api.add_files([
     'client/lib/deps_path.js',
     'client/lib/startup.js',
@@ -29,10 +33,6 @@ Package.on_use(function (api, where) {
     'client/compatibility/jquery.nicescroll.min.js',
     'client/compatibility/keyboard.js'
   ], 'client', {raw: true});
-
-  // Both
-  api.use(['accounts-base', 'presence', 'collection-hooks', 'streams'], ['client', 'server']);
-  api.add_files(['collections/models.js'], ['client', 'server']);
 
   // Server
   api.add_files(['server/lib/utils.js',
