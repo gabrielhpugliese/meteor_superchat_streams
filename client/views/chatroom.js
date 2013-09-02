@@ -15,6 +15,10 @@ sendMsg = function () {
         host = Path(),
         action = 'says';
 
+    if (message.length === 0) {
+        return;
+    }
+
     superChatMsgs.insert({
         msg: message,
         owner: owner,
@@ -75,7 +79,7 @@ Deps.autorun(function () {
     var user = Meteor.user();
     if (user && typeof user.superchat.canChat !== 'undefined' && !user.superchat.canChat) {
         $('#msg').attr('disabled', 'disabled');
-        $('#msg').val('You are banned for 60s for flooding.');
+        $('#msg').val('You are banned for 60s due to flooding.');
         $('.msg-send').attr('disabled', 'disabled');
     } else {
         $('#msg').removeAttr('disabled');
