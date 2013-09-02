@@ -5,17 +5,6 @@ Meteor.publish('usersSuperChat', function(){
     return Meteor.users.find({}, {fields: {superchat: true}});
 });
 
-Meteor.publish('superChatUserPresence', function() {
-  // Setup some filter to find the users your logged in user
-  // cares about. It's unlikely that you want to publish the 
-  // presences of _all_ the users in the system.
-  var filter = {}; 
-
-  // ProTip: unless you need it, don't send lastSeen down as it'll make your 
-  // templates constantly re-render (and use bandwidth)
-  return Meteor.presences.find(filter, {fields: {state: true, userId: true}});
-});
-
 superChatStream.permissions.read(function (eventName) {
     return true;
 });

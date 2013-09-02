@@ -54,6 +54,8 @@ If you don't want to have a global chat for entire website, you can set a Path s
 What's needed to do on javascript part is set a Path. Path is a reactive source of current page path (like window.location.pathname).
 So, whenever it changes, it must be updated calling ```Path.set(path)```
 
+
+
 ### Example with mini-pages
 ```javascript
 Meteor.pages({
@@ -87,7 +89,36 @@ Template.parentTemplate.rendered = function() {
 }
 ```
 
-### Dependencies
+### Tracking users online
+
+You will have to set up the Meteor-presence publication and
+subscription:
+
+```javascript
+/* On Server */
+Meteor.publish('superChatUserPresence', function (whereAt) {
+    var filter = whereAt ? {'state.whereAt': whereAt} : {}; 
+
+    return Meteor.presences.find(filter, {fields: {state: true, userId: true}});
+});
+
+/* On Client */
+Meteor.Presence.state = function() {
+  return {
+    online: true,
+    whereAt: Path();
+  };
+}
+
+Deps.autorun(function () {
+    Meteor.subscribe('superChatUserPresence', Path());
+});
+```
+
+## Dependencies
 
 Thanks @arunoda for his great Meteor project called [Meteor
-Streams](https://github.com/arunoda/meteor-streams). 
+Streams](https://github.com/arunoda/meteor-streams).
+
+Thanks @tmeasday for this awesome package [Meteor
+Presence](https://github.com/tmeasday/meteor-presence)

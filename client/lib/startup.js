@@ -1,7 +1,6 @@
 Path = DepsPath();
 
 usersSubs = Meteor.subscribe('usersSuperChat');
-Meteor.subscribe('superChatUserPresence');
 
 // Marked options
 
