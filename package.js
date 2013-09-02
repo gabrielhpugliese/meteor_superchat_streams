@@ -18,7 +18,6 @@ Package.on_use(function (api, where) {
 
   // Both
   api.use(['accounts-base', 'presence', 'collection-hooks', 'streams'], ['client', 'server']);
-  api.add_files(['collections/models.js'], ['client', 'server']);
 
   api.add_files([
     'client/lib/deps_path.js',

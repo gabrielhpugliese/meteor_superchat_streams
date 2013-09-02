@@ -3,7 +3,9 @@ superChatMsgs = new Meteor.Collection(null);
 superChatStream = new Meteor.Stream('superChatStream');
 
 sendMsg = function () {
-    if (! Meteor.user()) {
+    var user = Meteor.user();
+    if (! user || 
+        (user.superchat && typeof user.superchat.canChat !== 'undefined' && !user.superchat.canChat)) {
         return;
     }
 
@@ -66,8 +68,12 @@ insertAtCaret = function(txtarea, text) {
 }
 
 Deps.autorun(function () {
+    if (! usersSubs.ready()) {
+        return;
+    }
+
     var user = Meteor.user();
-    if (user && typeof user.profile.canChat !== 'undefined' && !user.profile.canChat) {
+    if (user && typeof user.superchat.canChat !== 'undefined' && !user.superchat.canChat) {
         $('#msg').attr('disabled', 'disabled');
         $('#msg').val('You are banned for 60s for flooding.');
         $('.msg-send').attr('disabled', 'disabled');
