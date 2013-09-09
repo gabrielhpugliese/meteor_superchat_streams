@@ -26,17 +26,18 @@ sendMsg = function () {
         action: action
     });
     superChatStream.emit('chat', message, host);
+    scrollToBottom();
     
     $msg.val('');
 }
 
 scrollToBottom = function () {
-    Meteor.defer(function() {
+    Meteor.setTimeout(function() {
         try {
             var chat = document.getElementById('chat');
             chat.scrollTop = chat.scrollHeight;
         } catch(err) {}
-    });
+    }, 100);
 }
 
 insertAtCaret = function(txtarea, text) {
@@ -89,25 +90,31 @@ Deps.autorun(function () {
 });
 
 Template.chatroom.rendered = function () {
+
+    if (Session.equals('chatroomRendered', true)) {
+        return;
+    }
+    Session.set('chatroomRendered', true);
+
     // TODO: Ask meteor-talk about this unbind strange behaviour
     $('#msg').unbind('focus');
     $('#msg').focus(function () {
-    	var self = this;
+        var self = this;
         KeyboardJS.on('shift + enter', function(){
             insertAtCaret(self, '\n');
-        	return false;
-       	});
+            return false;
+        });
 
-		KeyboardJS.on('enter', function () {
-		    if ($('#msg').attr('disabled') !== 'disabled')
-	           sendMsg();
-	        return false;
-		});
+        KeyboardJS.on('enter', function () {
+            if ($('#msg').attr('disabled') !== 'disabled')
+               sendMsg();
+            return false;
+        });
     });
     
     $('#msg').blur(function () {
-    	KeyboardJS.clear('enter');
-    	KeyboardJS.clear('shift + enter');
+        KeyboardJS.clear('enter');
+        KeyboardJS.clear('shift + enter');
     });
     
     try {
@@ -120,9 +127,12 @@ Template.chatroom.rendered = function () {
         console.error('Could not apply jQuery.niceScroll to the chatroom', err);
     }
     
-    scrollToBottom();
-    
-    
+}
+
+Template.chatroom.destroyed = function () {
+    $('#chat,#users-list').getNiceScroll().hide();
+
+    Session.set('chatroomRendered', false);
 }
 
 Template.chatroom.msgs = function() {
@@ -192,5 +202,7 @@ superChatStream.on('chat', function (message, host, action) {
         host: host,
         action: action
     });
+    scrollToBottom();
 });
+
 
