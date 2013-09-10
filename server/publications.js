@@ -37,20 +37,26 @@ superChatStream.addFilter(function (eventName, args) {
         lastMessageOn = user.superchat.lastMessageOn,
         now = +(new Date());
 
-    if (messagesInRow >= 3 && now - lastMessageOn <= 1000) {
-        Meteor.users.update({_id: user._id}, {
-            $set: {
-                'superchat.lastMessageOn': +(new Date()), 
-                'superchat.canChat': false,
-                'superchat.whenCanChat': now + (60 * 1000)
-            }
-        });
+    if (messagesInRow >= 3) {
+        if (now - lastMessageOn <= 1000) {
+            Meteor.users.update({_id: user._id}, {
+                $set: {
+                    'superchat.lastMessageOn': +(new Date()), 
+                    'superchat.canChat': false,                                                                                                                                                                      
+                    'superchat.whenCanChat': now + (60 * 1000)
+                }
+            });
+        } else {
+            Meteor.users.update({_id: user._id}, {
+                $set: {'superchat.lastMessageOn': +(new Date()), 'superchat.messagesInRow': 1}
+            });
+        }
     } else {
         Meteor.users.update({_id: user._id}, {
             $set: {'superchat.lastMessageOn': +(new Date())},
             $inc: {'superchat.messagesInRow': 1}
         });
-    }
+    }  
 
     args.push('says');
     return args;
