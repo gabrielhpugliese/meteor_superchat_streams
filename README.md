@@ -115,6 +115,17 @@ Deps.autorun(function () {
 });
 ```
 
+### Number of messages on chat area
+
+Just put on the client, on startup (example with 50 max messages once on
+screen):
+
+```javascript
+Superchat = {
+    messageLimitOnScreen: 50
+};
+```
+
 ## Dependencies
 
 Thanks @arunoda for his great Meteor project called [Meteor

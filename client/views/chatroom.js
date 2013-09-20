@@ -2,6 +2,18 @@
 superChatMsgs = new Meteor.Collection(null);
 superChatStream = new Meteor.Stream('superChatStream');
 
+Superchat = {
+    messageLimitOnScreen: 50
+};
+
+removeLastMessage = function () {
+    var allMessages = superChatMsgs.find().fetch();
+    if (allMessages.length >= Superchat.messageLimitOnScreen) {
+        var lastMessage = allMessages[0];
+        superChatMsgs.remove(lastMessage._id);
+    }
+}
+
 sendMsg = function () {
     var user = Meteor.user();
     if (! user || 
@@ -19,11 +31,13 @@ sendMsg = function () {
         return;
     }
 
+    removeLastMessage();
     superChatMsgs.insert({
         msg: message,
         owner: owner,
         host: host,
-        action: action
+        action: action,
+        time: new Date()
     });
     superChatStream.emit('chat', message, host);
     scrollToBottom();
@@ -136,7 +150,7 @@ Template.chatroom.destroyed = function () {
 }
 
 Template.chatroom.msgs = function() {
-    return superChatMsgs.find({host: Path()});
+    return superChatMsgs.find({host: Path()}, {limit: Superchat.messageLimitOnScreen});
 };
 
 Template.chatroom.getProfile = function(userId) {
@@ -196,11 +210,13 @@ superChatStream.on('chat', function (message, host, action) {
         return;
     }
 
+    removeLastMessage();
     superChatMsgs.insert({
         msg: message,
         owner: this.userId,
         host: host,
-        action: action
+        action: action,
+        time: new Date()
     });
     scrollToBottom();
 });
