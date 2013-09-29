@@ -45,6 +45,7 @@ meteor add accounts-google
 ```html
 <template name="index">
   {{> chatroom}}
+  {{loginButtons}}
 </template>
 ```
 

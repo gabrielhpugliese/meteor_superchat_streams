@@ -11,13 +11,12 @@
                         <a href="{{url}}" target="_blank"><img class="img-circle" src="{{pic_square}}" />{{name}}</a>
                         {{/with}}
                         {{action}}:
-                        {{#markdown}}{{{msg}}}{{/markdown}}
+                        {{#markdownAlternate}}{{{msg}}}{{/markdownAlternate}}
                     </p>
                     {{/each}}
                     {{/isolate}}
                 </div>
                 <div id="msg-wrap">
-                    {{loginButtons}}
                     <a href="https://help.github.com/articles/github-flavored-markdown" target="_blank" class="btn pull-right" title="Github Flavored Markdown"><i class="icon-info-sign"></i></a>
                     <button id="toggle-users-list" class="btn pull-right" title="Users online"><i class="icon-user"></i></button>
                     {{#constant}}

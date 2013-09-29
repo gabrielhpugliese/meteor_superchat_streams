@@ -22,6 +22,7 @@ Package.on_use(function (api, where) {
   api.add_files([
     'client/lib/deps_path.js',
     'client/lib/startup.js',
+    'client/lib/helpers.js',
     'client/stylesheets/highlight/default.css',
     'client/stylesheets/superchat.less',
     'client/views/chatroom.html',
