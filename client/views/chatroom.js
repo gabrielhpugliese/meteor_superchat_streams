@@ -185,21 +185,6 @@ Template.chatroom.events({
             $('#msg-counter').text(500 - len);
         }
     },
-    'focus #msg' : function (event) {
-        if (Meteor.user()) {
-            $('#login-buttons').popover('hide');
-            return;
-        }
-        $('#login-buttons').popover({
-            animation: true,
-            content: function () {
-               return 'You first need to login before sending messages.';
-            }
-        }).popover('show');
-    },
-    'focusout #msg' : function (event) {
-        $('#login-buttons').popover('hide');
-    },
     'click #toggle-users-list' : function () {
         $('#users-list').toggle();
     }
