@@ -55,6 +55,10 @@ If you don't want to have a global chat for entire website, you can set a Path s
 What's needed to do on javascript part is set a Path. Path is a reactive source of current page path (like window.location.pathname).
 So, whenever it changes, it must be updated calling ```Path.set(path)```
 
+I've removed loginButtons from it and the popover that shows up to tell
+people to login, because loginButtons frag has an id on its div. And if
+you have another button on your site, it blows up your code. **So add them
+to your site!**
 
 
 ### Example with mini-pages
