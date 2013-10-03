@@ -2,8 +2,13 @@ Path = DepsPath();
 
 usersSubs = Meteor.subscribe('usersSuperChat');
 
-// Marked options
+if (typeof Superchat === 'undefined') {
+    Superchat = {};
+    Superchat.messageLimitOnScreen = 50;
+    Superchat.defaultProfilePicture = 'http://i.imgur.com/HKSh9X9.png';
+}
 
+// Marked options
 marked.setOptions({
     langPrefix: '',
     breaks: true,

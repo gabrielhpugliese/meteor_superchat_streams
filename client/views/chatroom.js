@@ -2,10 +2,6 @@
 superChatMsgs = new Meteor.Collection(null);
 superChatStream = new Meteor.Stream('superChatStream');
 
-Superchat = {
-    messageLimitOnScreen: 50
-};
-
 removeLastMessage = function () {
     var allMessages = superChatMsgs.find().fetch();
     if (allMessages.length >= Superchat.messageLimitOnScreen) {

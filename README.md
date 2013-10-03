@@ -118,12 +118,13 @@ Deps.autorun(function () {
 
 ### Number of messages on chat area
 
-Just put on the client, on startup (example with 50 max messages once on
-screen):
+Just put on the client, on startup (if you override the default object,
+make sure you put all those params):
 
 ```javascript
 Superchat = {
-    messageLimitOnScreen: 50
+    messageLimitOnScreen: 50,
+    defaultProfilePicture: 'http://i.imgur.com/HKSh9X9.png'
 };
 ```
 
