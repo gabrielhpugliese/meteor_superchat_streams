@@ -8,6 +8,8 @@ if (typeof Superchat === 'undefined') {
     Superchat.defaultProfilePicture = 'http://i.imgur.com/HKSh9X9.png';
 }
 
+Session.set('chatroomRendered', false);
+
 // Marked options
 marked.setOptions({
     langPrefix: '',

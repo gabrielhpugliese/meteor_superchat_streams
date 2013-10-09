@@ -100,50 +100,28 @@ Deps.autorun(function () {
 });
 
 Template.chatroom.rendered = function () {
+    Session.set('chatroomRendered', true);
+};
 
-    if (Session.equals('chatroomRendered', true)) {
+Deps.autorun(function () {
+    if (Session.equals('chatroomRendered', false)) {
         return;
     }
-    Session.set('chatroomRendered', true);
 
-    // TODO: Ask meteor-talk about this unbind strange behaviour
-    $('#msg').unbind('focus');
-    $('#msg').focus(function () {
-        var self = this;
-        KeyboardJS.on('shift + enter', function(){
-            insertAtCaret(self, '\n');
-            return false;
-        });
-
-        KeyboardJS.on('enter', function () {
-            if ($('#msg').attr('disabled') !== 'disabled')
-               sendMsg();
-            return false;
-        });
-    });
-    
-    $('#msg').blur(function () {
-        KeyboardJS.clear('enter');
-        KeyboardJS.clear('shift + enter');
-    });
-    
-    try {
-        $('#chat,#users-list').niceScroll({
+    Meteor.setTimeout(function () {
+        $('#chat, #users-list').niceScroll({
             autohidemode: false,
             cursoropacitymin: 0.3,
             cursoropacitymax: 0.3
         });
-    } catch (err) {
-        console.error('Could not apply jQuery.niceScroll to the chatroom', err);
-    }
-    
-}
+    }, 500);
+});
 
 Template.chatroom.destroyed = function () {
-    $('#chat,#users-list').getNiceScroll().hide();
+    $('#chat, #users-list').getNiceScroll().hide();
 
     Session.set('chatroomRendered', false);
-}
+};
 
 Template.chatroom.msgs = function() {
     return superChatMsgs.find({host: Path()}, {limit: Superchat.messageLimitOnScreen});
@@ -183,6 +161,23 @@ Template.chatroom.events({
     },
     'click #toggle-users-list' : function () {
         $('#users-list').toggle();
+    },
+    'focus #msg': function (event) {
+        var self = event.target;
+        KeyboardJS.on('shift + enter', function(){
+            insertAtCaret(self, '\n');
+            return false;
+        });
+
+        KeyboardJS.on('enter', function () {
+            if ($('#msg').attr('disabled') !== 'disabled')
+               sendMsg();
+            return false;
+        });
+    },
+    'blur #msg': function (event) {
+        KeyboardJS.clear('enter');
+        KeyboardJS.clear('shift + enter');
     }
 });
 
