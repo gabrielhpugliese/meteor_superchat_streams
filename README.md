@@ -109,10 +109,10 @@ Meteor.publish('superChatUserPresence', function (whereAt) {
 
 /* On Client */
 Meteor.Presence.state = function() {
-  return {
-    online: true,
-    whereAt: Path();
-  };
+    return {
+        online: true,
+        whereAt: Path()
+    };
 }
 
 Deps.autorun(function () {
