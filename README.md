@@ -60,6 +60,17 @@ people to login, because loginButtons frag has an id on its div. And if
 you have another button on your site, it blows up your code. **So add them
 to your site!**
 
+### Example with iron-router
+```javascript
+Router.map(function () {
+    this.route('index', {
+        path: '/',
+        before: function () {
+            Path.set(Router.current().path);
+        }
+    });
+});
+```
 
 ### Example with mini-pages
 ```javascript
