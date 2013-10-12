@@ -103,18 +103,21 @@ Template.chatroom.rendered = function () {
     Session.set('chatroomRendered', true);
 };
 
-Deps.autorun(function () {
+Deps.autorun(function (c) {
     if (Session.equals('chatroomRendered', false)) {
         return;
     }
 
-    Meteor.setTimeout(function () {
+    var timeout = Meteor.setTimeout(function () {
         $('#chat, #users-list').niceScroll({
             autohidemode: false,
             cursoropacitymin: 0.3,
             cursoropacitymax: 0.3
         });
     }, 500);
+    c.onInvalidate(function () {
+        Meteor.clearTimeout(timeout); 
+    });
 });
 
 Template.chatroom.destroyed = function () {
