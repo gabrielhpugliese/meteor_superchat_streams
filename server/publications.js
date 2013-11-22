@@ -63,7 +63,8 @@ superChatStream.addFilter(function (eventName, args) {
 });
 
 Meteor.users.before('insert', function (userId, doc) {
-    if (!doc.superchat)
+    if (! doc.superchat) {
         doc.superchat = {};
-    doc = saveUserProfile(doc);
+    }
+    saveUserProfile(doc);
 });
