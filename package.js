@@ -6,6 +6,7 @@ Package.on_use(function (api, where) {
     var both = ['client', 'server'];
     // Client
     api.use([
+            'meteor',
             'deps',
             'startup',
             'session',
@@ -45,9 +46,14 @@ Package.on_use(function (api, where) {
     ], 'client', {raw: true});
 
     // Server
-    api.add_files(['server/lib/utils.js',
+    api.add_files([
+                  'server/lib/utils.js',
                   'server/publications.js',
                   'server/unban.js'
     ], 'server');
+
+    if (typeof api.export !== 'undefined') {
+        api.export('Superchat', both);
+    }
 
 });

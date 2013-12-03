@@ -3,14 +3,12 @@
     "description": "Chat with Github Flavored Markdown and social login using Meteor Streams",
     "homepage": "https://github.com/gabrielhpugliese/meteor_superchat_streams",
     "author": "Gabriel Henrique Pugliese <gabrielhpugliese@gmail.com>",
-    "version": "0.5.4",
+    "version": "0.6.0",
     "git": "https://github.com/gabrielhpugliese/meteor_superchat_streams",
-        "packages": {
+    "packages": {
         "marked": {},
         "presence": {},
-        "collection-hooks": {
-            "version": "0.2.3"
-        },
+        "collection-hooks": {},
         "streams": {}
     }
 }

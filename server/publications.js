@@ -62,7 +62,7 @@ superChatStream.addFilter(function (eventName, args) {
     return args;
 });
 
-Meteor.users.before('insert', function (userId, doc) {
+Meteor.users.before.insert(function (userId, doc) {
     if (! doc.superchat) {
         doc.superchat = {};
     }
