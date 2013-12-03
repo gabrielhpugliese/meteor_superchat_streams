@@ -15,7 +15,9 @@ Package.on_use(function (api, where) {
             'jquery',
             'bootstrap',
             'marked',
-            'accounts-ui'
+            'accounts-ui',
+            'standard-app-packages',
+            'templates'
     ], 'client');
 
     // Both
