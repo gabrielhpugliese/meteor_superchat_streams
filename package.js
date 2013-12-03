@@ -7,6 +7,7 @@ Package.on_use(function (api, where) {
     // Client
     api.use([
             'meteor',
+            'standard-app-packages',
             'deps',
             'startup',
             'session',
@@ -15,9 +16,7 @@ Package.on_use(function (api, where) {
             'jquery',
             'bootstrap',
             'marked',
-            'accounts-ui',
-            'standard-app-packages',
-            'templates'
+            'accounts-ui'
     ], 'client');
 
     // Both
