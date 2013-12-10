@@ -4,10 +4,16 @@ Package.describe({
 
 Package.on_use(function (api, where) {
     var both = ['client', 'server'];
-    // Client
     api.use([
             'meteor',
             'standard-app-packages',
+            'accounts-base', 
+            'presence', 
+            'collection-hooks', 
+            'streams'
+    ], both);
+
+    api.use([
             'deps',
             'startup',
             'session',
@@ -18,14 +24,6 @@ Package.on_use(function (api, where) {
             'marked',
             'accounts-ui'
     ], 'client');
-
-    // Both
-    api.use([
-            'accounts-base', 
-            'presence', 
-            'collection-hooks', 
-            'streams'
-    ], both);
 
     api.add_files([
                   'lib/common.js'
@@ -46,7 +44,6 @@ Package.on_use(function (api, where) {
                   'client/compatibility/keyboard.js'
     ], 'client', {raw: true});
 
-    // Server
     api.add_files([
                   'server/lib/utils.js',
                   'server/publications.js',
