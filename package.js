@@ -52,6 +52,7 @@ Package.on_use(function (api, where) {
 
     if (typeof api.export !== 'undefined') {
         api.export('Superchat', both);
+        api.export('Path', 'client');
     }
 
 });
